@@ -1,42 +1,9 @@
-import os.path
-
 from behave import *
 
-from citymodel.scrape.OpenStreetMap import get_city_boundary_gdf
-from learnkit.train.NetworkAnalysis import *
-from shapeutils.GeoDataFrameUtils import *
 from citymodel.base.Network import Network
-
-
-def save_feather(path, gdf):
-	full_path = f"data/{path}.feather"
-	if not os.path.exists(os.path.dirname(full_path)):
-		os.makedirs(os.path.dirname(full_path))
-	gdf.to_feather(full_path)
-	assert (os.path.exists(full_path))
-	return
-
-
-def read_feather(path):
-	full_path = f"data/{path}.feather"
-	if not os.path.exists(full_path):
-		raise FileNotFoundError(full_path)
-	return read_gdf(full_path)
-
-
-def get_parcel_gdf(path):
-	processed_parcels_gdf_path = f"{path}/parcel"
-	if os.path.exists(processed_parcels_gdf_path):
-		return read_feather(processed_parcels_gdf_path)
-	return read_feather(f"{path}/parcel")
-
-
-def validate_geo_dataframe(context, data_frame):
-	assert (context.gdf_db is not None)
-	assert (context.gdf_db[data_frame] is not None)
-	assert (context.gdf_db[data_frame].crs is not None)
-	assert (True in list(context.gdf_db[data_frame].geometry.is_valid))
-	return True
+from citymodel.scrape.OpenStreetMap import get_city_boundary_gdf
+from datautils import *
+from learnkit.train.NetworkAnalysis import *
 
 
 @given("{data_frame} data located within {city}")
@@ -87,6 +54,7 @@ def step_impl(context, series, radii_str, data_frame):
 		analyst = SpatialAnalyst(parcel_gdf, target_gdf)
 		network = Network(nodes_gdf, links_gdf)
 		parcel_gdf_joined = SpatialNetworkAnalyst(analyst, network)\
-			.buffer_join_network(int(radius))
-		save_feather(f"{context.city}/parcel", parcel_gdf_joined)
+			.buffer_join_network(int(radius), columns=[series])
+		save_feather(f"{context.city}/processed/parcel", parcel_gdf_joined)
+		gc.collect()
 	pass

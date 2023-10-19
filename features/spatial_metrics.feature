@@ -4,7 +4,10 @@ Feature: Spatial Metrics for City of Vancouver
 
   As an urban researcher,
   I want to spatially aggregate georeferenced data sources to property parcels
-  So that I can understand urban walkability and affordability dynamics.
+  So that I can train a predictive model.
+
+  Background:
+    Given geospatial data located within Metro Vancouver Regional District
 
   Scenario Outline: Process Street Network Metrics
     Given <street_network> data located within Metro Vancouver Regional District
@@ -46,3 +49,21 @@ Feature: Spatial Metrics for City of Vancouver
     Examples:
       | series    |
       | area_sqkm |
+
+  Scenario Outline: Network Analysis - Open Street Map Amenities
+    Given open_street_map/amenities data located within Metro Vancouver Regional District
+    When the geometry data of open_street_map/amenities is valid
+    And <amenity_type> is available in the open_street_map/amenities data
+    Then join <amenity_type> within 400, 800, 1600 meters from open_street_map/amenities to parcel layer via street network
+    Examples:
+      | amenity_type     |
+      | schools          |
+      | hospitals        |
+      | parks            |
+      | shopping_malls   |
+      | public_transport |
+      | restaurants      |
+      | banks            |
+      | libraries        |
+      | police_stations  |
+      | post_offices     |
