@@ -7,63 +7,40 @@ Feature: Spatial Metrics for City of Vancouver
   So that I can train a predictive model.
 
   Background:
-    Given geospatial data located within Metro Vancouver Regional District
+    Given parcel data located within Metro Vancouver Regional District
 
-  Scenario Outline: Process Street Network Metrics
+  Scenario Outline: Clean and Process Street Network
     Given <street_network> data located within Metro Vancouver Regional District
     When the geometry data of <street_network> is valid
     Then calculate segment length, straightness for <street_network>
+
     Examples:
       | street_network  |
       | network/walking |
       | network/cycling |
       | network/driving |
 
-  Scenario Outline: Network Analysis - Census Dissemination Area
-    Given census/dissemination_area data located within Metro Vancouver Regional District
-    When the geometry data of census/dissemination_area is valid
-    And <series> is available in the census/dissemination_area data
-    Then join <series> within 400, 800, 1600 meters from census/dissemination_area to parcel layer via street network
-    Examples:
-      | series                                        |
-      | Population, 2016                              |
-      | Population density per square kilometre, 2016 |
-      | n_dwellings                                   |
+  Scenario Outline: Aggregate from Data Source to Parcel Along Street Network
+    Given <data_source> data located within Metro Vancouver Regional District
+    When the geometry data of <data_source> is valid
+    And <series> is available in the <data_source> data
+    Then join <series> within 800, 1600 meters from <data_source> to parcel layer via street network
 
-  Scenario Outline: Network Analysis - BC Assessment Property
-    Given bc_assessment/property data located within Metro Vancouver Regional District
-    When the geometry data of bc_assessment/property is valid
-    And <series> is available in the bc_assessment/property data
-    Then join <series> within 400, 800, 1600 meters from bc_assessment/property to parcel layer via street network
     Examples:
-      | series             |
-      | n_use              |
-      | age                |
-      | NUMBER_OF_BEDROOMS |
-
-  Scenario Outline: Network Analysis - BC Assessment Parcel
-    Given bc_assessment/parcel data located within Metro Vancouver Regional District
-    When the geometry data of bc_assessment/parcel is valid
-    And <series> is available in the bc_assessment/parcel data
-    Then join <series> within 400, 800, 1600 meters from bc_assessment/parcel to parcel layer via street network
-    Examples:
-      | series    |
-      | area_sqkm |
-
-  Scenario Outline: Network Analysis - Open Street Map Amenities
-    Given open_street_map/amenities data located within Metro Vancouver Regional District
-    When the geometry data of open_street_map/amenities is valid
-    And <amenity_type> is available in the open_street_map/amenities data
-    Then join <amenity_type> within 400, 800, 1600 meters from open_street_map/amenities to parcel layer via street network
-    Examples:
-      | amenity_type     |
-      | schools          |
-      | hospitals        |
-      | parks            |
-      | shopping_malls   |
-      | public_transport |
-      | restaurants      |
-      | banks            |
-      | libraries        |
-      | police_stations  |
-      | post_offices     |
+      | data_source               | series                                        |
+      | bc_assessment/parcel      | area_sqkm                                     |
+      | bc_assessment/property    | n_use                                         |
+      | bc_assessment/property    | age                                           |
+      | bc_assessment/property    | NUMBER_OF_BEDROOMS                            |
+      | census/dissemination_area | Population, 2016                              |
+      | census/dissemination_area | Population density per square kilometre, 2016 |
+      | census/dissemination_area | n_dwellings                                   |
+      | census/dissemination_area | walk                                          |
+      | craigslist/housing_rent   | price                                         |
+      | open_street_map/amenities | amenity                                       |
+      | network/walking           | length                                        |
+      | network/cycling           | length                                        |
+      | network/driving           | length                                        |
+      | network/walking           | straight                                      |
+      | network/cycling           | straight                                      |
+      | network/driving           | straight                                      |

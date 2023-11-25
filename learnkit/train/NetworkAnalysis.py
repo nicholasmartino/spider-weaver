@@ -140,8 +140,8 @@ class SpatialNetworkAnalyst:
 			except:
 				for item in gdf[col].unique():
 					gdf.loc[gdf[col] == item, item] = 1
-					gdf.loc[gdf[col] != item, item] = 0
 				gdf = gdf.drop(col, axis=1)
+				gdf = gdf.fillna(0)
 		return gdf
 
 	@staticmethod

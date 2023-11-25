@@ -31,7 +31,9 @@ def step_impl(context, data_frame):
 @step("{series} is available in the {data_frame} data")
 def step_impl(context, series, data_frame):
 	validate_geo_dataframe(context, data_frame)
-	assert (series in context.gdf_db[data_frame].columns)
+	assert (series in context.gdf_db[data_frame].columns), \
+		f"Choose one of {list(context.gdf_db[data_frame].columns)}"
+	context.gdf_db[data_frame] = context.gdf_db[data_frame].loc[:, [series, 'geometry']]
 	pass
 
 
@@ -43,18 +45,16 @@ def step_impl(context, network):
 	pass
 
 
-@then("join {series} within {radii_str} meters from {data_frame} to parcel layer via street network")
-def step_impl(context, series, radii_str, data_frame):
+@then("join {series} within {radii} meters from {data_frame} to parcel layer via street network")
+def step_impl(context, series, radii, data_frame):
 	parcel_gdf = get_parcel_gdf(context.city)
 	nodes_gdf = read_feather(f"{context.city}/network/street_node")
 	links_gdf = read_feather(f"{context.city}/network/street_link")
 	target_gdf = context.gdf_db[data_frame]
-	radii = radii_str.split(", ")
-	for radius in radii:
+	for radius in radii.split(", "):
 		analyst = SpatialAnalyst(parcel_gdf, target_gdf)
 		network = Network(nodes_gdf, links_gdf)
-		parcel_gdf_joined = SpatialNetworkAnalyst(analyst, network)\
-			.buffer_join_network(int(radius), columns=[series])
+		parcel_gdf_joined = SpatialNetworkAnalyst(analyst, network).buffer_join_network(int(radius))
 		save_feather(f"{context.city}/processed/parcel", parcel_gdf_joined)
 		gc.collect()
 	pass

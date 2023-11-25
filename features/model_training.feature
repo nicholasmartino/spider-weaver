@@ -7,15 +7,19 @@ Feature: Urban Space Dynamics Prediction
   So that I can accurately predict key indicators related to walkability and affordability in urban areas,
   And identify spatial indicators that significantly influence these dynamics.
 
-  Scenario Outline: Predicting dependent variables with trained data
+  Background:
     Given a dataset of georeferenced parcel geometries within the Metro Vancouver Regional District
-    And the dataset includes a valid series of explanatory and <dependent> spatial or quantitative variables
-    When 80% of the available data is used to train a RandomForestRegressor model
-    Then use the remaining data to test the accuracy of my trained model
-    And extract the most significant spatial predictors of the <dependent> variables
+
+  Scenario Outline: Training a predictive model with spatial data
+    When the dataset includes valid quantitative and georeferenced data
+    Then use 80% of the available data to train a random forest model to predict <dependent> variable
 
     Examples:
-      | dependent |
-      | walkability        |
-      | affordability      |
-      | another_indicator  |
+      | dependent            |
+      | walk_r1600_ave_flat  |
+      | price_r1600_ave_flat |
+
+  Scenario: Predicting dependent variables with a trained model
+    And a predictive model trained with a data split
+    Then assess predictive accuracy based on the test data
+    And rank significant predictors using partial dependence analysis

@@ -18,10 +18,10 @@ def read_feather(path):
 
 
 def get_parcel_gdf(path):
-	processed_parcels_gdf_path = f"{path}/processed/parcel"
+	processed_parcels_gdf_path = f"data/{path}/processed/parcel.feather"
 	if os.path.exists(processed_parcels_gdf_path):
-		return read_feather(processed_parcels_gdf_path)
-	return read_feather(f"{path}/parcel")
+		return read_gdf(processed_parcels_gdf_path)
+	return read_gdf(f"data/{path}/parcel.feather")
 
 
 def validate_geo_dataframe(context, data_frame):
@@ -30,3 +30,11 @@ def validate_geo_dataframe(context, data_frame):
 	assert (context.gdf_db[data_frame].crs is not None)
 	assert (True in list(context.gdf_db[data_frame].geometry.is_valid))
 	return True
+
+
+def check_and_clean_path(path):
+	if not os.path.exists(path):
+		os.makedirs(path)
+	if len(os.listdir(path)) > 0:
+		for file in os.listdir(path):
+			os.remove(f"{path}/{file}")
