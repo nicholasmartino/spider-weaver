@@ -25,7 +25,7 @@ class SpatialNetworkAnalyst:
 
 		columns_to_analyze = columns
 		if columns is None:
-			columns_to_analyze = [col for col in right_gdf.columns if col != 'geometry']
+			columns_to_analyze = [col for col in right_gdf.columns if col not in ['geometry', 'node']]
 
 		self.__build_network()
 		net = self.network.pdn_net
@@ -34,11 +34,14 @@ class SpatialNetworkAnalyst:
 		if operations is None:
 			operations = ['ave']
 
+		new_columns = []
 		for col in columns_to_analyze:
 			net.set(node_ids=right_gdf["node"], variable=right_gdf[col])
 			for operation in operations:
 				agg = net.aggregate(distance=radius, type=operation, decay=decay)
-				left_gdf[f"{col}_r{radius}_{operation}_{decay}"] = list(agg.loc[left_gdf["node"]])
+				column_name = f"{col}_r{radius}_{operation}_{decay}"
+				left_gdf[column_name] = list(agg.loc[left_gdf["node"]])
+				new_columns.append(column_name)
 			gc.collect()
 
 		"""
@@ -78,9 +81,9 @@ class SpatialNetworkAnalyst:
 			gc.collect()
 		"""
 
-		return left_gdf
+		return left_gdf.loc[:, new_columns]
 
-	def get_distance_to_nearest(self, max_dist=1000, max_items=10, suffix='nearest'):
+	def get_distance_to_nearest(self, max_dist=1600, suffix='nearest'):
 		"""
 		Gets the distance from every element in the left gdf to closest element on right gdf
 		:return:
@@ -89,20 +92,19 @@ class SpatialNetworkAnalyst:
 		network = self.__build_network()
 		network.precompute(max_dist)
 		network.set_pois(
-			suffix,
+			category=suffix,
 			maxdist=max_dist,
-			maxitems=max_items,
-			x_col=self.right_gdf.geometry.x,
-			y_col=self.right_gdf.geometry.y)
-		dist = network.nearest_pois(distance=max_dist, category=suffix, num_pois=max_items).drop([1], axis=1)
-		dist.columns = [f'd2_{suffix}_{col}' for col in dist.columns]
+			maxitems=2,
+			x_col=self.right_gdf.centroid.x,
+			y_col=self.right_gdf.centroid.y)
+		dist = network.nearest_pois(distance=max_dist, category=suffix, num_pois=2).drop([1], axis=1)
+		distance_columns = [f'd2_{suffix}']
+		dist.columns = distance_columns
 
 		gdf = self.__get_closest_node_id()
-		gdf.index = gdf['node']
-		gdf.loc[:, list(dist.columns)] = dist.loc[list(gdf.index), :]
-
+		dist['node'] = dist.index
 		gc.collect()
-		return gdf
+		return pd.merge(left=gdf, right=dist, how="left", on="node", copy=True).loc[:, distance_columns]
 
 	def __build_network(self, rebuild=False):
 		assert self.network is not None, AttributeError("Analyst object has no attribute 'network'")

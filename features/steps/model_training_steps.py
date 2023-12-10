@@ -27,13 +27,17 @@ def step_impl(state, ):
 def step_impl(state, train_size, dependent):
 	train_share = int(train_size)/100
 	test_share = round(1 - train_share, 2)
-	gdf = gpd.read_feather(state.data_path)
+	raw_gdf = gpd.read_feather(state.data_path)
+	feature_dict = read_feature_dict(f"{state.city}/processed/feature_dict.json")
+	gdf = raw_gdf.rename(feature_dict)
 
 	assert (dependent in list(gdf.columns)), f"Could not find {dependent} within {list(gdf.columns)}."
 	assert (types.is_numeric_dtype(gdf[dependent]))
 
-	invalid_columns = [dependent, 'geometry']
-	explanatory = [col for col in gdf.columns if col not in invalid_columns]
+	forbidden = ["walk_r", "price_r"]
+	invalid_list = [col for col in gdf.columns for invalid in forbidden if invalid in col]
+	invalid_set = ['geometry'] + list(set(invalid_list))
+	explanatory = list(set.difference(set(gdf.columns), invalid_set))
 
 	predictor = Predictor(
 		data=gdf,
@@ -51,8 +55,10 @@ def step_impl(state, train_size, dependent):
 @step("a predictive model trained with a data split")
 def step_impl(state):
 	assert (len(os.listdir(state.model_path)) > 0)
+	if not hasattr(state, "trained"):
+		state.trained = {}
 	for model in os.listdir(state.model_path):
-		state.trained = load_pickle(f"{state.model_path}/{model}")
+		state.trained[model] = load_pickle(f"{state.model_path}/{model}")
 		pass
 
 
@@ -60,7 +66,8 @@ def step_impl(state):
 def step_impl(state):
 	plot_path = f'data/{state.city}/processed/test'
 	check_and_clean_path(plot_path)
-	state.trained.test(plot_dir=plot_path)
+	for model in state.trained.keys():
+		state.trained[model].test(plot_dir=plot_path)
 	assert (len(os.listdir(plot_path)) > 0)
 
 
@@ -68,5 +75,6 @@ def step_impl(state):
 def step_impl(state):
 	plot_path = f'data/{state.city}/processed/predictors'
 	check_and_clean_path(plot_path)
-	state.trained.plot_partial_dependence(plot_dir=plot_path)
+	for model in state.trained.keys():
+		state.trained[model].plot_partial_dependence(plot_dir=plot_path)
 	assert (len(os.listdir(plot_path)) > 0)

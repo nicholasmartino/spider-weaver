@@ -5,6 +5,9 @@ from citymodel.scrape.OpenStreetMap import get_city_boundary_gdf
 from datautils import *
 from learnkit.train.NetworkAnalysis import *
 
+pd.set_option('display.max_columns', 10)
+pd.set_option('display.width', 1000)
+
 
 @given("{data_frame} data located within {city}")
 def step_impl(context, data_frame, city):
@@ -17,7 +20,7 @@ def step_impl(context, data_frame, city):
 	if not hasattr(context, 'data'):
 		context.gdf_db = {}
 	context.gdf_db[city] = boundary_gdf
-	context.gdf_db[data_frame] = data_gdf
+	context.gdf_db[data_frame] = data_gdf.copy().reset_index(drop=True)
 	pass
 
 
@@ -45,16 +48,27 @@ def step_impl(context, network):
 	pass
 
 
-@then("join {series} within {radii} meters from {data_frame} to parcel layer via street network")
-def step_impl(context, series, radii, data_frame):
+@then("{label} and join {series} within {radii} meters from {data_frame} to parcel layer via street network")
+def step_impl(context, label, series, radii, data_frame):
 	parcel_gdf = get_parcel_gdf(context.city)
 	nodes_gdf = read_feather(f"{context.city}/network/street_node")
 	links_gdf = read_feather(f"{context.city}/network/street_link")
-	target_gdf = context.gdf_db[data_frame]
+	save_feature_dict(label, series, f"{context.city}/processed/feature_dict.json")
+
+	target_gdf = context.gdf_db[data_frame].copy()
+	target_gdf[label] = target_gdf[series]
+	target_gdf = target_gdf.loc[:, [label, 'geometry']].copy()
+
+	joined_gdf = parcel_gdf.copy()
 	for radius in radii.split(", "):
-		analyst = SpatialAnalyst(parcel_gdf, target_gdf)
 		network = Network(nodes_gdf, links_gdf)
-		parcel_gdf_joined = SpatialNetworkAnalyst(analyst, network).buffer_join_network(int(radius))
-		save_feather(f"{context.city}/processed/parcel", parcel_gdf_joined)
+		analyst = SpatialAnalyst(parcel_gdf, target_gdf)
+		network_analyst = SpatialNetworkAnalyst(analyst, network)
+		joined_gdf = pd.concat([
+			joined_gdf,
+			network_analyst.buffer_join_network(radius=int(radius)),
+		], axis=1).drop_duplicates()
+		joined_gdf = joined_gdf.loc[:, ~joined_gdf.columns.duplicated()].copy()
+		save_feather(f"{context.city}/processed/parcel", joined_gdf)
 		gc.collect()
 	pass

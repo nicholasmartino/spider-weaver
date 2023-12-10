@@ -1,3 +1,6 @@
+import json
+import os.path
+
 from shapeutils.GeoDataFrameUtils import *
 
 
@@ -29,6 +32,7 @@ def validate_geo_dataframe(context, data_frame):
 	assert (context.gdf_db[data_frame] is not None)
 	assert (context.gdf_db[data_frame].crs is not None)
 	assert (True in list(context.gdf_db[data_frame].geometry.is_valid))
+	context.gdf_db[data_frame]['perimeter'] = context.gdf_db[data_frame].geometry.length
 	return True
 
 
@@ -38,3 +42,27 @@ def check_and_clean_path(path):
 	if len(os.listdir(path)) > 0:
 		for file in os.listdir(path):
 			os.remove(f"{path}/{file}")
+
+
+def read_feature_dict(path):
+	if not os.path.exists(path):
+		return {}
+
+	with open(path, 'r') as file:
+		data = json.load(file)
+
+	return data
+
+
+def save_feature_dict(key, value, path):
+	directory = os.path.dirname(path)
+	if not os.path.exists(directory):
+		os.makedirs(directory)
+	data = {}
+	if os.path.exists(path):
+		with open(path, 'r') as file:
+			data = json.load(file)
+	data[key] = value
+	with open(path, 'w') as file:
+		json.dump(data, file)
+	return os.path.exists(path)

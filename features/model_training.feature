@@ -15,9 +15,11 @@ Feature: Urban Space Dynamics Prediction
     Then use 80% of the available data to train a random forest model to predict <dependent> variable
 
     Examples:
-      | dependent            |
-      | walk_r1600_ave_flat  |
-      | price_r1600_ave_flat |
+      | dependent                  |
+      | walkability_r800_ave_flat  |
+      | walkability_r1600_ave_flat |
+      | rent_price_r800_ave_flat   |
+      | rent_price_r1600_ave_flat  |
 
   Scenario: Predicting dependent variables with a trained model
     And a predictive model trained with a data split
