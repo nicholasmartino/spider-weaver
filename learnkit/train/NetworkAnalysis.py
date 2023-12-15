@@ -32,7 +32,7 @@ class SpatialNetworkAnalyst:
 		net.precompute(radius)
 
 		if operations is None:
-			operations = ['ave']
+			operations = ['ave', 'sum']
 
 		new_columns = []
 		for col in columns_to_analyze:

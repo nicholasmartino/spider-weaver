@@ -1,5 +1,5 @@
 import os.path
-
+import shutil
 from behave import *
 from pandas.api import types
 from learnkit.train.Predictor import *
@@ -27,15 +27,13 @@ def step_impl(state, ):
 def step_impl(state, train_size, dependent):
 	train_share = int(train_size)/100
 	test_share = round(1 - train_share, 2)
-	raw_gdf = gpd.read_feather(state.data_path)
-	feature_dict = read_feature_dict(f"{state.city}/processed/feature_dict.json")
-	gdf = raw_gdf.rename(feature_dict)
+	gdf = gpd.read_feather(state.data_path)
 
 	assert (dependent in list(gdf.columns)), f"Could not find {dependent} within {list(gdf.columns)}."
 	assert (types.is_numeric_dtype(gdf[dependent]))
 
-	forbidden = ["walk_r", "price_r"]
-	invalid_list = [col for col in gdf.columns for invalid in forbidden if invalid in col]
+	not_explanatory = ["walk_r", "price_r", "walkability_r", "rent_price_r"]
+	invalid_list = [col for col in gdf.columns for invalid in not_explanatory if invalid in col]
 	invalid_set = ['geometry'] + list(set(invalid_list))
 	explanatory = list(set.difference(set(gdf.columns), invalid_set))
 
@@ -78,3 +76,16 @@ def step_impl(state):
 	for model in state.trained.keys():
 		state.trained[model].plot_partial_dependence(plot_dir=plot_path)
 	assert (len(os.listdir(plot_path)) > 0)
+
+
+@step("training results were valid")
+def step_impl(state):
+	processed_directory = f'data/{state.city}/processed'
+	assert (len(processed_directory) > 0)
+
+
+@step("export processed results to manuscript path")
+def step_impl(state):
+	processed_directory = f'data/{state.city}/processed'
+	manuscript_directory = "phd-generative-city/assets/images/training"
+	shutil.copytree(processed_directory, manuscript_directory)

@@ -48,8 +48,8 @@ def step_impl(context, network):
 	pass
 
 
-@then("{label} and join {series} within {radii} meters from {data_frame} to parcel layer via street network")
-def step_impl(context, label, series, radii, data_frame):
+@then("{operation} the {series} ({label}) within {radii} meters from {data_frame} to parcels via street network")
+def step_impl(context, operation, series, label, radii, data_frame):
 	parcel_gdf = get_parcel_gdf(context.city)
 	nodes_gdf = read_feather(f"{context.city}/network/street_node")
 	links_gdf = read_feather(f"{context.city}/network/street_link")

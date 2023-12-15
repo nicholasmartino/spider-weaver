@@ -25,3 +25,7 @@ Feature: Urban Space Dynamics Prediction
     And a predictive model trained with a data split
     Then assess predictive accuracy based on the test data
     And rank significant predictors using partial dependence analysis
+
+  Scenario: Exporting results to manuscript path
+    Given training results were valid
+    Then export processed results to manuscript path
