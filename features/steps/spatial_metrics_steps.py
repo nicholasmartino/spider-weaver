@@ -66,7 +66,7 @@ def step_impl(context, operation, series, label, radii, data_frame):
 		network_analyst = SpatialNetworkAnalyst(analyst, network)
 		joined_gdf = pd.concat([
 			joined_gdf,
-			network_analyst.buffer_join_network(radius=int(radius)),
+			network_analyst.buffer_join_network(radius=int(radius), operations=[operation]),
 		], axis=1).drop_duplicates()
 		joined_gdf = joined_gdf.loc[:, ~joined_gdf.columns.duplicated()].copy()
 		save_feather(f"{context.city}/processed/parcel", joined_gdf)

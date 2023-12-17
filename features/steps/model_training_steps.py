@@ -1,9 +1,12 @@
+import os
 import os.path
 import shutil
+
 from behave import *
 from pandas.api import types
-from learnkit.train.Predictor import *
+
 from datautils import *
+from learnkit.train.Predictor import *
 
 
 @given("a dataset of georeferenced {parcel} geometries within the {city}")
@@ -86,6 +89,12 @@ def step_impl(state):
 
 @step("export processed results to manuscript path")
 def step_impl(state):
-	processed_directory = f'data/{state.city}/processed'
-	manuscript_directory = "phd-generative-city/assets/images/training"
-	shutil.copytree(processed_directory, manuscript_directory)
+	folder_name = "processed"
+	processed_directory = f"data/{state.city}/{folder_name}"
+	manuscript_directory = f"{os.path.expanduser('~')}/GitHub/phd-generative-city/assets/images"
+	training_directory = f"{manuscript_directory}/training"
+	if os.path.exists(training_directory):
+		shutil.rmtree(training_directory)
+	assert (os.path.exists(processed_directory))
+	assert (os.path.exists(manuscript_directory))
+	shutil.copytree(processed_directory, training_directory)
