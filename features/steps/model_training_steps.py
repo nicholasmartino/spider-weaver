@@ -1,11 +1,12 @@
-import os
 import os.path
 import shutil
 
 from behave import *
 from pandas.api import types
 
-from datautils import *
+from utils.datautils import *
+from utils.exportutils import *
+from utils.gdfutils import *
 from learnkit.train.Predictor import *
 
 
@@ -76,9 +77,21 @@ def step_impl(state):
 def step_impl(state):
 	plot_path = f'data/{state.city}/processed/predictors'
 	check_and_clean_path(plot_path)
+	features = set()
+	gdf = gpd.read_feather(state.data_path)
 	for model in state.trained.keys():
-		state.trained[model].plot_partial_dependence(plot_dir=plot_path)
+		features.add(state.trained[model].plot_significant_indicators(plot_path))
+	for feature in features:
+		plot_choropleth_map(gdf, feature, plot_path)
 	assert (len(os.listdir(plot_path)) > 0)
+
+
+@step("plot parcels colored based on the most significant predictors")
+def step_impl(state):
+	plot_path = f'data/{state.city}/processed/predictors'
+	for model in state.trained.keys():
+		state.trained[model].plot_colored_gdf(plot_path)
+	return
 
 
 @step("training results were valid")
@@ -91,10 +104,15 @@ def step_impl(state):
 def step_impl(state):
 	folder_name = "processed"
 	processed_directory = f"data/{state.city}/{folder_name}"
-	manuscript_directory = f"{os.path.expanduser('~')}/GitHub/phd-generative-city/assets/images"
+	manuscript_directory = f"{get_assets_directory()}/images"
 	training_directory = f"{manuscript_directory}/training"
 	if os.path.exists(training_directory):
 		shutil.rmtree(training_directory)
 	assert (os.path.exists(processed_directory))
 	assert (os.path.exists(manuscript_directory))
 	shutil.copytree(processed_directory, training_directory)
+
+
+@step("export example tables as markdown files")
+def step_impl(context):
+	cucumber_to_markdown("features/spatial_metrics.feature", f"{get_assets_directory()}/tables")

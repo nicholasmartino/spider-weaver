@@ -2,7 +2,7 @@ from behave import *
 
 from citymodel.base.Network import Network
 from citymodel.scrape.OpenStreetMap import get_city_boundary_gdf
-from datautils import *
+from utils.datautils import *
 from learnkit.train.NetworkAnalysis import *
 
 pd.set_option('display.max_columns', 10)
@@ -66,7 +66,7 @@ def step_impl(context, operation, series, label, radii, data_frame):
 		network_analyst = SpatialNetworkAnalyst(analyst, network)
 		joined_gdf = pd.concat([
 			joined_gdf,
-			network_analyst.buffer_join_network(radius=int(radius), operations=[operation]),
+			network_analyst.buffer_join_network(radius=int(radius), operation=operation),
 		], axis=1).drop_duplicates()
 		joined_gdf = joined_gdf.loc[:, ~joined_gdf.columns.duplicated()].copy()
 		save_feather(f"{context.city}/processed/parcel", joined_gdf)

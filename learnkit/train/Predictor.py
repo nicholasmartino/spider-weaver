@@ -79,7 +79,7 @@ class Predictor:
         return self.__plot_partial_dependence(df, plot_dir)
 
     def __sort_by_importance(self):
-        if hasattr(self, 'permutation'):
+        if hasattr(self, 'permutation') & self.permutation is not None:
             return self.permutation
         x_train, x_test, y_train, y_test = self.split()
         perm_imp = permutation_importance(

@@ -16,16 +16,16 @@ Feature: Urban Space Dynamics Prediction
 
     Examples:
       | dependent                  |
-      | walkability_r800_ave_flat  |
       | walkability_r1600_ave_flat |
-      | rent_price_r800_ave_flat   |
       | rent_price_r1600_ave_flat  |
 
   Scenario: Predicting dependent variables with a trained model
-    And a predictive model trained with a data split
+    Given a predictive model trained with a data split
     Then assess predictive accuracy based on the test data
     And rank significant predictors using partial dependence analysis
 
   Scenario: Exporting results to manuscript path
     Given training results were valid
     Then export processed results to manuscript path
+    And export example tables as markdown files
+    

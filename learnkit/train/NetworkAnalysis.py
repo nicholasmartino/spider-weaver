@@ -14,7 +14,7 @@ class SpatialNetworkAnalyst:
 		self.network = network
 		return
 
-	def buffer_join_network(self, radius, decay='flat', columns=None, operations=None):
+	def buffer_join_network(self, radius, decay='flat', operation='ave', columns=None):
 		"""
 		Aggregates data from the right_gdf located on the surroundings of the gdf elements according to a street network
 		:return:
@@ -31,17 +31,13 @@ class SpatialNetworkAnalyst:
 		net = self.network.pdn_net
 		net.precompute(radius)
 
-		if operations is None:
-			operations = ['ave', 'sum']
-
 		new_columns = []
 		for col in columns_to_analyze:
 			net.set(node_ids=right_gdf["node"], variable=right_gdf[col])
-			for operation in operations:
-				agg = net.aggregate(distance=radius, type=operation, decay=decay)
-				column_name = f"{col}_r{radius}_{operation}_{decay}"
-				left_gdf[column_name] = list(agg.loc[left_gdf["node"]])
-				new_columns.append(column_name)
+			agg = net.aggregate(distance=radius, type=operation, decay=decay)
+			column_name = f"{col}_r{radius}_{operation}_{decay}"
+			left_gdf[column_name] = list(agg.loc[left_gdf["node"]])
+			new_columns.append(column_name)
 			gc.collect()
 
 		"""

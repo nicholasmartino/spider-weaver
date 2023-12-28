@@ -27,6 +27,10 @@ def get_parcel_gdf(path):
 	return read_gdf(f"data/{path}/parcel.feather")
 
 
+def get_assets_directory():
+	return f"{os.path.expanduser('~')}/GitHub/phd-generative-city/assets"
+
+
 def validate_geo_dataframe(context, data_frame):
 	assert (context.gdf_db is not None)
 	assert (context.gdf_db[data_frame] is not None)

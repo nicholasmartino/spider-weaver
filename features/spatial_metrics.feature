@@ -24,7 +24,7 @@ Feature: Spatial Metrics for City of Vancouver
     Given <data_source> data located within Metro Vancouver Regional District
     When the geometry data of <data_source> is valid
     And <series> is available in the <data_source> data
-    Then <operation> the <series> (<label>) within 800, 1600 meters from <data_source> to parcels via street network
+    Then <operation> the <series> (<label>) within 1600 meters from <data_source> to parcels via street network
 
     Examples:
       | data_source               | series                                        | label               | operation |
@@ -36,11 +36,12 @@ Feature: Spatial Metrics for City of Vancouver
       | bc_assessment/fabric      | TOTAL_FINISHED_AREA                           | finished_area       | sum       |
       | bc_assessment/fabric      | LAND_SIZE                                     | land_size           | ave       |
       | bc_assessment/fabric      | LAND_DEPTH                                    | land_depth          | ave       |
-      | bc_assessment/fabric      | NUMBER_OF_STOREYS                             | storey_count        | sum       |
-      | bc_assessment/fabric      | NUMBER_OF_STOREYS                             | storey_average      | ave       |
+      | bc_assessment/fabric      | NUMBER_OF_STOREYS                             | number_of_storeys   | sum       |
+      | bc_assessment/fabric      | NUMBER_OF_STOREYS                             | number_of_storeys   | ave       |
       | bc_assessment/fabric      | NET_LEASABLE_AREA                             | net_leasable_area   | sum       |
       | bc_assessment/fabric      | GROSS_LEASABLE_AREA                           | gross_leasable_area | sum       |
       | bc_assessment/fabric      | STRATA_UNIT_AREA                              | strata_unit_area    | ave       |
+      | bc_assessment/fabric      | STRATA_UNIT_AREA                              | strata_unit_area    | sum       |
       | bc_assessment/fabric      | AREA                                          | property_area       | sum       |
       | bc_assessment/fabric      | NUMBER_OF_BEDROOMS                            | bedroom_count       | sum       |
       | census/dissemination_area | Population, 2016                              | population          | sum       |
@@ -49,6 +50,7 @@ Feature: Spatial Metrics for City of Vancouver
       | census/dissemination_area | walk                                          | walkability         | ave       |
       | craigslist/housing_rent   | price                                         | rent_price          | ave       |
       | network/walking           | length                                        | walk_length         | ave       |
+      | network/walking           | length                                        | walk_length         | sum       |
       | network/cycling           | length                                        | cycle_length        | sum       |
       | network/walking           | straight                                      | walk_straightness   | ave       |
       | network/cycling           | straight                                      | cycle_straightness  | ave       |
