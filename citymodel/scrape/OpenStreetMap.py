@@ -1,6 +1,11 @@
+import math
+
 import geopandas as gpd
 import requests
+import shapely.geometry as geometry
+from scipy.spatial import Delaunay
 from shapely.geometry import Polygon
+from shapely.ops import unary_union
 
 
 def get_city_boundary_gdf(city):
@@ -11,17 +16,52 @@ def get_city_boundary_gdf(city):
     }, crs=4326)
 
 
+def distance(p1, p2):
+    return math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)
+
+
+def get_natural_bounds(elements, tolerance=10):
+    coordinates = []
+    for element in elements:
+        for member in element['members']:
+            if member['type'] == 'node':
+                coordinates.append([member['lon'], member['lat']])
+            elif member['type'] in ['way']:
+                coordinates += [[pair['lon'], pair['lat']] for pair in member['geometry']]
+
+    triangulation = Delaunay(coordinates)
+
+    # Step 2: Filter Triangles with Long Edges
+    filtered_triangles = []
+    for simplex in triangulation.simplices:
+        pts = [coordinates[idx] for idx in simplex]
+        edge_lengths = [distance(pts[i], pts[(i + 1) % 3]) for i in range(3)]
+        if all(edge <= tolerance for edge in edge_lengths):
+            filtered_triangles.append(pts)
+
+    # Step 3: Merge Remaining Triangles
+    polygons = [geometry.Polygon(triangle) for triangle in filtered_triangles]
+    merged_shape = unary_union(polygons)
+
+    # Step 4: Extract Outer Boundary
+    outer_boundary = merged_shape.boundary
+    return geometry.Polygon(outer_boundary)
+
+
 def get_bounding_box(elements):
     bbox = elements[0]['bounds']
+    return get_polygon_from_bbox(bbox)
+
+
+def get_polygon_from_bbox(bbox):
     min_lat, min_lon, max_lat, max_lon = bbox['minlat'], bbox['minlon'], bbox['maxlat'], bbox['maxlon']
-    polygon = Polygon([
+    return Polygon([
         (min_lon, min_lat),
         (min_lon, max_lat),
         (max_lon, max_lat),
         (max_lon, min_lat),
         (min_lon, min_lat)
     ])
-    return polygon
 
 
 def query_elements_from_city_name(city):

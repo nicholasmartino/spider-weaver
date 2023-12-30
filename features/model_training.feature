@@ -20,12 +20,11 @@ Feature: Urban Space Dynamics Prediction
       | rent_price_r1600_ave_flat  |
 
   Scenario: Predicting dependent variables with a trained model
-    Given a predictive model trained with a data split
+    Given a predictive model trained
     Then assess predictive accuracy based on the test data
-    And rank significant predictors using partial dependence analysis
+    And rank explanatory variables by permutation importance
 
-  Scenario: Exporting results to manuscript path
-    Given training results were valid
-    Then export processed results to manuscript path
-    And export example tables as markdown files
-    
+  Scenario: Exporting results to external path
+    Given a predictive model trained
+    Then plot charts and maps of 6 most important variables
+    And copy outputs to manuscript path

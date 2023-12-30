@@ -14,7 +14,7 @@ from sklearn.model_selection import train_test_split
 
 
 class Predictor:
-    def __init__(self, data=None, predictors=None, predicted=None, test_size=0.2, random_state=0, percentile=99):
+    def __init__(self, data=None, predictors=None, predicted=None, test_size=0.2, random_state=1, percentile=99):
         assert predicted in data.columns, AssertionError(f"Column {predicted} not found in input data")
 
         # Calculate and filter head and tails
@@ -74,13 +74,9 @@ class Predictor:
     def _is_regressor_null(self):
         assert self.regressor is not None, AssertionError("Regressor not found")
 
-    def plot_significant_indicators(self, plot_dir):
-        df = self.__sort_by_importance()
-        return self.__plot_partial_dependence(df, plot_dir)
-
-    def __sort_by_importance(self):
-        if hasattr(self, 'permutation') & self.permutation is not None:
-            return self.permutation
+    def get_permutation_importance(self):
+        if self.permutation is not None:
+            return self.permutation.sort_values(by='dependencies', ascending=False)
         x_train, x_test, y_train, y_test = self.split()
         perm_imp = permutation_importance(
             estimator=self.regressor,
@@ -90,22 +86,21 @@ class Predictor:
         )
         self.permutation = pd.DataFrame({
             'feature': self.predictors,
-            'importance': pd.Series(perm_imp['importances_mean'])
-        }).sort_values(by='importance', ascending=False)
+            'dependencies': pd.Series(perm_imp['importances_mean'])
+        }).sort_values(by='dependencies', ascending=False)
         return self.permutation
 
-    def __plot_partial_dependence(self, df, plot_dir):
+    def plot_partial_dependence(self, plot_dir, features):
         x_train, x_test, y_train, y_test = self.split()
 
         # Plot dependencies
         fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(10, 6))
-        features = df.feature.head(6)
         dependence_display = PartialDependenceDisplay.from_estimator(self.regressor, x_train, features, ax=axes.ravel())
         plt.tight_layout()
 
         plot_path = f'{plot_dir}/partial_dependencies_{self.predicted}.png'
         dependence_display.figure_.savefig(plot_path, dpi=300, transparent=True)
-        return list(features)
+        return set(features)
 
 
 def load_pickle(path):

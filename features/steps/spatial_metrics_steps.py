@@ -9,11 +9,11 @@ pd.set_option('display.max_columns', 10)
 pd.set_option('display.width', 1000)
 
 
-@given("{data_frame} data located within {city}")
+@given("{data_frame} data samples located within {city}")
 def step_impl(context, data_frame, city):
 	context.city = city
 	data_gdf = read_feather(f"{context.city}/{data_frame}")
-	boundary_gdf = get_city_boundary_gdf(city).to_crs(26910)
+	boundary_gdf = get_city_boundary_gdf(context.city).to_crs(26910)
 	assert (boundary_gdf is not None)
 	assert (gdf_box_overlaps(boundary_gdf, data_gdf))
 
@@ -50,10 +50,11 @@ def step_impl(context, network):
 
 @then("{operation} the {series} ({label}) within {radii} meters from {data_frame} to parcels via street network")
 def step_impl(context, operation, series, label, radii, data_frame):
-	parcel_gdf = get_parcel_gdf(context.city)
+	boundary_gdf = context.gdf_db[context.city]
+	parcel_gdf = gpd.overlay(get_sample_parcels(context.city), boundary_gdf)
 	nodes_gdf = read_feather(f"{context.city}/network/street_node")
 	links_gdf = read_feather(f"{context.city}/network/street_link")
-	save_feature_dict(label, series, f"{context.city}/processed/feature_dict.json")
+	save_feature_dict(label, series, f"data/{context.city}/processed/feature_dict.json")
 
 	target_gdf = context.gdf_db[data_frame].copy()
 	target_gdf[label] = target_gdf[series]
@@ -69,6 +70,6 @@ def step_impl(context, operation, series, label, radii, data_frame):
 			network_analyst.buffer_join_network(radius=int(radius), operation=operation),
 		], axis=1).drop_duplicates()
 		joined_gdf = joined_gdf.loc[:, ~joined_gdf.columns.duplicated()].copy()
-		save_feather(f"{context.city}/processed/parcel", joined_gdf)
+		save_feather(f"{context.city}/processed/samples/parcel", joined_gdf)
 		gc.collect()
 	pass

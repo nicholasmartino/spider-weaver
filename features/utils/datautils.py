@@ -20,8 +20,8 @@ def read_feather(path):
 	return read_gdf(full_path)
 
 
-def get_parcel_gdf(path):
-	processed_parcels_gdf_path = f"data/{path}/processed/parcel.feather"
+def get_sample_parcels(path):
+	processed_parcels_gdf_path = f"data/{path}/processed/samples/parcel.feather"
 	if os.path.exists(processed_parcels_gdf_path):
 		return read_gdf(processed_parcels_gdf_path)
 	return read_gdf(f"data/{path}/parcel.feather")

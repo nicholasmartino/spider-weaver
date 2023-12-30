@@ -4,25 +4,29 @@ import shutil
 from behave import *
 from pandas.api import types
 
+from learnkit.train.Predictor import *
 from utils.datautils import *
 from utils.exportutils import *
 from utils.gdfutils import *
-from learnkit.train.Predictor import *
 
 
 @given("a dataset of georeferenced {parcel} geometries within the {city}")
 def step_impl(state, parcel, city):
 	state.city = city
 	state.data = parcel
-	state.data_path = f"data/{city}/processed/{parcel}.feather"
-	state.model_path = f'data/{state.city}/processed/models'
-	assert (os.path.exists(state.data_path))
+	state.parcel_samples = f"data/{city}/processed/samples/{parcel}.feather"
+	state.predictors = f'data/{state.city}/processed/predictors'
+	state.dependencies = f'data/{state.city}/processed/dependencies'
+	state.importance = f'data/{state.city}/processed/importance'
+	state.maps = f'data/{state.city}/processed/maps'
+	state.test = f'data/{state.city}/processed/test'
+	assert (os.path.exists(state.parcel_samples))
 	pass
 
 
 @when("the dataset includes valid quantitative and georeferenced data")
 def step_impl(state, ):
-	gdf = read_gdf(state.data_path)
+	gdf = read_gdf(state.parcel_samples)
 	assert (gdf.crs is not None)
 	assert ('geometry' in gdf.columns)
 
@@ -31,7 +35,8 @@ def step_impl(state, ):
 def step_impl(state, train_size, dependent):
 	train_share = int(train_size)/100
 	test_share = round(1 - train_share, 2)
-	gdf = gpd.read_feather(state.data_path)
+	gdf = gpd.read_feather(state.parcel_samples)
+	save_path = state.predictors
 
 	assert (dependent in list(gdf.columns)), f"Could not find {dependent} within {list(gdf.columns)}."
 	assert (types.is_numeric_dtype(gdf[dependent]))
@@ -50,57 +55,54 @@ def step_impl(state, train_size, dependent):
 	)
 	predictor.split()
 	predictor.regressor = predictor.train()
-	predictor.save(state.model_path)
-	assert (len(os.listdir(state.model_path)) > 0)
+	predictor.save(save_path)
+	assert (len(os.listdir(save_path)) > 0)
 
 
-@step("a predictive model trained with a data split")
+@step("a predictive model trained")
 def step_impl(state):
-	assert (len(os.listdir(state.model_path)) > 0)
+	assert (len(os.listdir(state.predictors)) > 0)
 	if not hasattr(state, "trained"):
 		state.trained = {}
-	for model in os.listdir(state.model_path):
-		state.trained[model] = load_pickle(f"{state.model_path}/{model}")
+	for model in os.listdir(state.predictors):
+		state.trained[model] = load_pickle(f"{state.predictors}/{model}")
 		pass
 
 
 @then("assess predictive accuracy based on the test data")
 def step_impl(state):
-	plot_path = f'data/{state.city}/processed/test'
-	check_and_clean_path(plot_path)
+	directory = state.test
+	check_and_clean_path(directory)
 	for model in state.trained.keys():
-		state.trained[model].test(plot_dir=plot_path)
-	assert (len(os.listdir(plot_path)) > 0)
+		state.trained[model].test(plot_dir=directory)
+	assert (len(os.listdir(directory)) > 0)
 
 
-@step("rank significant predictors using partial dependence analysis")
+@step("rank explanatory variables by permutation importance")
 def step_impl(state):
-	plot_path = f'data/{state.city}/processed/predictors'
-	check_and_clean_path(plot_path)
-	features = set()
-	gdf = gpd.read_feather(state.data_path)
-	for model in state.trained.keys():
-		features.add(state.trained[model].plot_significant_indicators(plot_path))
+	directory = state.importance
+	models = state.trained
+	check_and_clean_path(directory)
+	for model in models.keys():
+		df = models.get_permutation_importance()
+		df.to_csv(f"{directory}/{model}.csv")
+	assert (len(os.listdir(directory)) > 0)
+
+
+@step("plot charts and maps of {count} most important variables")
+def step_impl(state, count):
+	check_and_clean_path(state.maps)
+	gdf = read_samples(state.parcel_samples)
+	features = read_important_features(state.importance, count)
+	predictors = read_predictors(state.predictors)
 	for feature in features:
-		plot_choropleth_map(gdf, feature, plot_path)
-	assert (len(os.listdir(plot_path)) > 0)
+		plot_choropleth_map(gdf, feature, state.maps)
+	for predictor in predictors:
+		predictor.plot_partial_dependence(state.dependencies, features)
+	assert (len(os.listdir(state.maps)) > 0)
 
 
-@step("plot parcels colored based on the most significant predictors")
-def step_impl(state):
-	plot_path = f'data/{state.city}/processed/predictors'
-	for model in state.trained.keys():
-		state.trained[model].plot_colored_gdf(plot_path)
-	return
-
-
-@step("training results were valid")
-def step_impl(state):
-	processed_directory = f'data/{state.city}/processed'
-	assert (len(processed_directory) > 0)
-
-
-@step("export processed results to manuscript path")
+@step("copy outputs to manuscript path")
 def step_impl(state):
 	folder_name = "processed"
 	processed_directory = f"data/{state.city}/{folder_name}"
@@ -111,8 +113,23 @@ def step_impl(state):
 	assert (os.path.exists(processed_directory))
 	assert (os.path.exists(manuscript_directory))
 	shutil.copytree(processed_directory, training_directory)
-
-
-@step("export example tables as markdown files")
-def step_impl(context):
 	cucumber_to_markdown("features/spatial_metrics.feature", f"{get_assets_directory()}/tables")
+
+
+def read_samples(samples_path):
+	return gpd.read_feather(samples_path)
+
+
+def read_predictors(predictors_dir):
+	return [load_pickle(f"{predictors_dir}/{model}") for model in os.listdir(predictors_dir)]
+
+
+def read_important_features(importance_dir, feature_count):
+	all_dependencies = [
+		pd.read_csv(f"{importance_dir}/{file}", encoding="latin1")
+		for file in os.listdir(importance_dir) if ".csv" in file
+	]
+	importance_df = pd.concat(all_dependencies)\
+		.groupby('feature', as_index=False).sum()\
+		.sort_values('dependencies', ascending=False)
+	return list(importance_df.head(int(feature_count)).feature)
