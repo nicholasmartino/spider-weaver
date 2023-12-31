@@ -41,6 +41,8 @@ def step_impl(state, train_size, dependent):
 	assert (dependent in list(gdf.columns)), f"Could not find {dependent} within {list(gdf.columns)}."
 	assert (types.is_numeric_dtype(gdf[dependent]))
 
+	plot_choropleth_map(gdf, dependent, state.maps)
+
 	not_explanatory = ["walk_r", "price_r", "walkability_r", "rent_price_r"]
 	invalid_list = [col for col in gdf.columns for invalid in not_explanatory if invalid in col]
 	invalid_set = ['geometry'] + list(set(invalid_list))
@@ -81,11 +83,11 @@ def step_impl(state):
 @step("rank explanatory variables by permutation importance")
 def step_impl(state):
 	directory = state.importance
-	models = state.trained
+	predictors = read_predictors(state.predictors)
 	check_and_clean_path(directory)
-	for model in models.keys():
-		df = models.get_permutation_importance()
-		df.to_csv(f"{directory}/{model}.csv")
+	for predictor in predictors:
+		df = predictor.get_permutation_importance()
+		df.to_csv(f"{directory}/{predictor}.csv")
 	assert (len(os.listdir(directory)) > 0)
 
 

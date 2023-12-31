@@ -9,17 +9,6 @@ Feature: Spatial Metrics for City of Vancouver
   Background:
     Given parcel data samples located within Metro Vancouver Regional District
 
-  Scenario Outline: Clean and Process Street Network
-    Given <street_network> data samples located within Metro Vancouver Regional District
-    When the geometry data of <street_network> is valid
-    Then calculate segment length, straightness for <street_network>
-
-    Examples:
-      | street_network  |
-      | network/walking |
-      | network/cycling |
-      | network/driving |
-
   Scenario Outline: Aggregate from Data Source to Parcel Along Street Network
     Given <data_source> data samples located within Metro Vancouver Regional District
     When the geometry data of <data_source> is valid
@@ -51,3 +40,7 @@ Feature: Spatial Metrics for City of Vancouver
       | network/cycling           | length                                        | cycle_length        | sum       |
       | network/walking           | straight                                      | walk_straightness   | ave       |
       | network/cycling           | straight                                      | cycle_straightness  | ave       |
+      | ubc/zoning                | fsr_max                                       | max_fsr             | ave       |
+      | ubc/zoning                | fsr_max                                       | max_fsr             | max       |
+      | ubc/zoning                | fsr_max                                       | max_fsr             | sum       |
+      | ubc/zoning                | zc                                            | zone_classification | sum       |
