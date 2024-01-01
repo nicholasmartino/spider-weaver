@@ -2,6 +2,10 @@
 
 Feature: Data Gathering
 
+  Scenario: Download GPS Traces
+    Given a valid identification of a Metro Vancouver Regional District
+    Then download and save GPS traces
+
   Scenario Outline: Clean and Process Street Network
     Given <street_network> data samples located within Metro Vancouver Regional District
     When the geometry data of <street_network> is valid
@@ -12,11 +16,3 @@ Feature: Data Gathering
       | network/walking |
       | network/cycling |
       | network/driving |
-
-  Scenario Outline: Download GPS Traces
-    Given a valid identification of a <place_name>
-    Then download and save GPS traces
-
-    Examples:
-      | place_name                        |
-      | Metro Vancouver Regional District |

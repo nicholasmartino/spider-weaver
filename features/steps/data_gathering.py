@@ -1,39 +1,89 @@
+import datetime
+import math
+from itertools import product
+
 import geopandas as gpd
 import requests
 from behave import *
+from geopy.distance import geodesic
 from lxml import etree
 from shapely.geometry import Point
 
 from citymodel.scrape.OpenStreetMap import get_city_boundary_gdf
 
 
+def split_bbox(total_bounds, max_size=0.25):
+    """Split the bounding box into smaller boxes within the maximum size limit."""
+    min_lon, min_lat, max_lon, max_lat = total_bounds
+    lon_steps = int((max_lon - min_lon) // max_size) + 1
+    lat_steps = int((max_lat - min_lat) // max_size) + 1
+
+    for i, j in product(range(lon_steps), range(lat_steps)):
+        new_min_lon = min_lon + i * max_size
+        new_min_lat = min_lat + j * max_size
+        new_max_lon = min(new_min_lon + max_size, max_lon)
+        new_max_lat = min(new_min_lat + max_size, max_lat)
+        yield new_min_lon, new_min_lat, new_max_lon, new_max_lat
+
+
 def download_and_save_gps_traces(place_name):
     boundary = get_city_boundary_gdf(place_name)
-
-    # Fetch GPS data from OSM API
-    bbox = "<define_your_bbox_here>"  # Define the bounding box for the place
-    url = f"https://api.openstreetmap.org/api/0.6/trackpoints?bbox={bbox}&page=0"
-    response = requests.get(url)
-    if response.status_code != 200:
-        raise Exception(f"Failed to fetch GPS data for {place_name}")
-
-    # Parse the XML data
-    root = etree.fromstring(response.content)
     points = []
-    for point in root.findall('.//trkpt'):
-        lat = float(point.get('lat'))
-        lon = float(point.get('lon'))
-        points.append(Point(lon, lat))
+    for bbox in split_bbox(boundary.total_bounds):
+        bbox_string = ','.join(map(str, bbox))
+        url = f"https://api.openstreetmap.org/api/0.6/trackpoints?bbox={bbox_string}&page=0"
+        response = requests.get(url)
+        if response.status_code != 200:
+            print(f"Warning: Failed to fetch GPS data for bbox {bbox_string} with status code {response.status_code}")
+            continue
+
+        # Parse the XML data
+        root = etree.fromstring(response.content)
+
+        # Define the namespace map to use with XPath
+        nsmap = {'gpx': 'http://www.topografix.com/GPX/1/0'}
+
+        # Use the namespace map in your XPath expression
+        for trkseg in root.findall('.//gpx:trkseg', namespaces=nsmap):
+            previous_point = None
+            previous_time = None
+            for trkpt in trkseg.findall('.//gpx:trkpt', namespaces=nsmap):
+                lat = float(trkpt.get('lat'))
+                lon = float(trkpt.get('lon'))
+                current_point = Point(lon, lat)
+                time = trkpt.find('.//gpx:time', namespaces=nsmap)
+                if time is None:
+                    continue
+                time_text = time.text
+                current_time = datetime.datetime.fromisoformat(time_text.replace('Z', '+00:00'))
+
+                if previous_point is not None and previous_time is not None:
+                    speed = calculate_speed(previous_point, current_point, previous_time, current_time)
+                    if speed <= 5:  # Assuming 5 km/h as the max walking speed
+                        points.append(current_point)
+
+                previous_point = current_point
+                previous_time = current_time
 
     # Create a GeoDataFrame
     gdf = gpd.GeoDataFrame(geometry=points, crs="EPSG:4326")  # GPS data is usually in WGS 84 (EPSG:4326)
-
-    # Convert the CRS to EPSG:26910
+    gdf['count'] = 1
     gdf.to_crs(epsg=26910, inplace=True)
 
     # Save to .feather file
-    gdf.reset_index(drop=True).to_feather(f"{place_name}_gps_traces.feather")
-    return
+    gdf.reset_index(drop=True).to_feather(f"data/{place_name}/open_street_map/gps_traces.feather")
+
+
+def calculate_speed(point1, point2, time1, time2):
+    # Calculate the distance in kilometers
+    distance = geodesic((point1.y, point1.x), (point2.y, point2.x)).kilometers
+    # Calculate the total seconds
+    time_delta = (time2 - time1).total_seconds()
+    # Speed = distance / time in hours
+    if time_delta != 0:
+        speed = distance / (time_delta / 3600)  # Speed in km/h
+        return speed
+    return math.inf
 
 
 @given('a valid identification of a {place_name}')
