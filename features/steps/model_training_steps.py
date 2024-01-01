@@ -41,6 +41,7 @@ def step_impl(state, train_size, dependent):
 	assert (dependent in list(gdf.columns)), f"Could not find {dependent} within {list(gdf.columns)}."
 	assert (types.is_numeric_dtype(gdf[dependent]))
 
+	check_and_clean_path(state.maps)
 	plot_choropleth_map(gdf, dependent, state.maps)
 
 	not_explanatory = ["walk_r", "price_r", "walkability_r", "rent_price_r"]
@@ -93,7 +94,6 @@ def step_impl(state):
 
 @step("plot charts and maps of {count} most important variables")
 def step_impl(state, count):
-	check_and_clean_path(state.maps)
 	gdf = read_samples(state.parcel_samples)
 	features = read_important_features(state.importance, count)
 	predictors = read_predictors(state.predictors)
