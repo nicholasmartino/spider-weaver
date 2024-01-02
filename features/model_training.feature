@@ -16,7 +16,7 @@ Feature: Urban Space Dynamics Prediction
 
     Examples:
       | dependent                  |
-      | walkability_r1600_ave_flat |
+      | walkability_r1600_sum_flat |
       | rent_price_r1600_ave_flat  |
 
   Scenario: Predicting dependent variables with a trained model

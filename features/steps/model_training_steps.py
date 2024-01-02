@@ -41,7 +41,6 @@ def step_impl(state, train_size, dependent):
 	assert (dependent in list(gdf.columns)), f"Could not find {dependent} within {list(gdf.columns)}."
 	assert (types.is_numeric_dtype(gdf[dependent]))
 
-	check_and_clean_path(state.maps)
 	plot_choropleth_map(gdf, dependent, state.maps)
 
 	not_explanatory = ["walk_r", "price_r", "walkability_r", "rent_price_r"]

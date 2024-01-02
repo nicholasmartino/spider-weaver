@@ -1,5 +1,6 @@
 import datetime
 import math
+import os.path
 from itertools import product
 
 import geopandas as gpd
@@ -27,51 +28,77 @@ def split_bbox(total_bounds, max_size=0.25):
 
 
 def download_and_save_gps_traces(place_name):
+    nsmap = {'gpx': 'http://www.topografix.com/GPX/1/0'}
     boundary = get_city_boundary_gdf(place_name)
-    points = []
-    for bbox in split_bbox(boundary.total_bounds):
+    output_path = f"data/{place_name}/open_street_map/gps_traces.feather"
+
+    gdf = gpd.GeoDataFrame(
+        columns=['box_id', 'segment_id', 'point_id', 'time', 'speed', 'geometry'],
+        geometry='geometry',
+        crs="EPSG:4326"
+    )  # GPS data is usually in WGS 84 (EPSG:4326)
+
+    if os.path.exists(output_path):
+        gdf = gpd.read_feather(output_path)
+
+    for i, bbox in enumerate(split_bbox(boundary.total_bounds)):
         bbox_string = ','.join(map(str, bbox))
-        url = f"https://api.openstreetmap.org/api/0.6/trackpoints?bbox={bbox_string}&page=0"
-        response = requests.get(url)
-        if response.status_code != 200:
-            print(f"Warning: Failed to fetch GPS data for bbox {bbox_string} with status code {response.status_code}")
+        page = 0
+
+        if i < gdf['box_id'].max():
             continue
 
-        # Parse the XML data
-        root = etree.fromstring(response.content)
+        while True:
+            url = f"https://api.openstreetmap.org/api/0.6/trackpoints?bbox={bbox_string}&page={page}"
+            response = requests.get(url)
+            if response.status_code != 200:
+                print(f"Warning: Failed to fetch GPS data for {bbox_string} with status code {response.status_code}")
+                break
 
-        # Define the namespace map to use with XPath
-        nsmap = {'gpx': 'http://www.topografix.com/GPX/1/0'}
+            root = etree.fromstring(response.content)
+            if not root.findall('.//gpx:trkpt', namespaces=nsmap):
+                break
 
-        # Use the namespace map in your XPath expression
-        for trkseg in root.findall('.//gpx:trkseg', namespaces=nsmap):
-            previous_point = None
-            previous_time = None
-            for trkpt in trkseg.findall('.//gpx:trkpt', namespaces=nsmap):
-                lat = float(trkpt.get('lat'))
-                lon = float(trkpt.get('lon'))
-                current_point = Point(lon, lat)
-                time = trkpt.find('.//gpx:time', namespaces=nsmap)
-                if time is None:
-                    continue
-                time_text = time.text
-                current_time = datetime.datetime.fromisoformat(time_text.replace('Z', '+00:00'))
+            for j, trkseg in enumerate(root.findall('.//gpx:trkseg', namespaces=nsmap)):
+                previous_point = None
+                previous_time = None
 
-                if previous_point is not None and previous_time is not None:
-                    speed = calculate_speed(previous_point, current_point, previous_time, current_time)
-                    if speed <= 5:  # Assuming 5 km/h as the max walking speed
-                        points.append(current_point)
+                for k, trkpt in enumerate(trkseg.findall('.//gpx:trkpt', namespaces=nsmap)):
 
-                previous_point = current_point
-                previous_time = current_time
+                    if (i in gdf['box_id']) & (j in gdf['segment_id']) & (k in gdf['point_id']):
+                        continue
 
-    # Create a GeoDataFrame
-    gdf = gpd.GeoDataFrame(geometry=points, crs="EPSG:4326")  # GPS data is usually in WGS 84 (EPSG:4326)
-    gdf['count'] = 1
-    gdf.to_crs(epsg=26910, inplace=True)
+                    lat = float(trkpt.get('lat'))
+                    lon = float(trkpt.get('lon'))
 
-    # Save to .feather file
-    gdf.reset_index(drop=True).to_feather(f"data/{place_name}/open_street_map/gps_traces.feather")
+                    current_point = Point(lon, lat)
+                    time_element = trkpt.find('.//gpx:time', namespaces=nsmap)
+                    current_time = None
+                    speed = None
+
+                    if time_element is not None:
+                        current_time = datetime.datetime.fromisoformat(time_element.text.replace('Z', '+00:00'))
+
+                    if previous_point is not None and previous_time is not None:
+                        speed = calculate_speed(previous_point, current_point, previous_time, current_time)
+
+                    index = len(gdf)
+                    gdf.at[index, 'box_id'] = i
+                    gdf.at[index, 'segment_id'] = j
+                    gdf.at[index, 'point_id'] = k
+                    gdf.at[index, 'time'] = current_time
+                    gdf.at[index, 'speed'] = speed
+                    gdf.at[index, 'geometry'] = current_point
+                    gdf.at[index, 'count'] = 1
+
+                    previous_point = current_point
+                    previous_time = current_time
+
+            page += 1  # Increment page number for the next request
+            gdf[gdf['speed'] <= 10]\
+                .to_crs(epsg=26910)\
+                .reset_index(drop=True)\
+                .to_feather(output_path)
 
 
 def calculate_speed(point1, point2, time1, time2):
