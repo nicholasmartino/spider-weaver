@@ -87,7 +87,7 @@ def step_impl(state):
 	check_and_clean_path(directory)
 	for predictor in predictors:
 		df = predictor.get_permutation_importance()
-		df.to_csv(f"{directory}/{predictor}.csv")
+		df.to_csv(f"{directory}/{predictor.predicted}.csv")
 	assert (len(os.listdir(directory)) > 0)
 
 

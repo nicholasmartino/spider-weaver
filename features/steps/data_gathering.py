@@ -31,9 +31,10 @@ def download_and_save_gps_traces(place_name):
     nsmap = {'gpx': 'http://www.topografix.com/GPX/1/0'}
     boundary = get_city_boundary_gdf(place_name)
     output_path = f"data/{place_name}/open_street_map/gps_traces.feather"
+    max_page = 30
 
     gdf = gpd.GeoDataFrame(
-        columns=['box_id', 'segment_id', 'point_id', 'time', 'speed', 'geometry'],
+        columns=['box_id', 'page', 'segment_id', 'point_id', 'time', 'speed', 'geometry'],
         geometry='geometry',
         crs="EPSG:4326"
     )  # GPS data is usually in WGS 84 (EPSG:4326)
@@ -45,10 +46,16 @@ def download_and_save_gps_traces(place_name):
         bbox_string = ','.join(map(str, bbox))
         page = 0
 
-        if i < gdf['box_id'].max():
-            continue
-
         while True:
+            if page > max_page:
+                break
+
+            if (i in list(gdf['box_id'])) & (page in list(gdf[gdf['box_id'] == i]['page'])):
+                page += 1
+                continue
+
+            print(f"bbox#{i} [{bbox_string}], page#{page}")
+            save = False
             url = f"https://api.openstreetmap.org/api/0.6/trackpoints?bbox={bbox_string}&page={page}"
             response = requests.get(url)
             if response.status_code != 200:
@@ -65,13 +72,13 @@ def download_and_save_gps_traces(place_name):
 
                 for k, trkpt in enumerate(trkseg.findall('.//gpx:trkpt', namespaces=nsmap)):
 
-                    if (i in gdf['box_id']) & (j in gdf['segment_id']) & (k in gdf['point_id']):
-                        continue
-
                     lat = float(trkpt.get('lat'))
                     lon = float(trkpt.get('lon'))
-
                     current_point = Point(lon, lat)
+
+                    if current_point in gdf['geometry']:
+                        continue
+
                     time_element = trkpt.find('.//gpx:time', namespaces=nsmap)
                     current_time = None
                     speed = None
@@ -84,6 +91,7 @@ def download_and_save_gps_traces(place_name):
 
                     index = len(gdf)
                     gdf.at[index, 'box_id'] = i
+                    gdf.at[index, 'page'] = page
                     gdf.at[index, 'segment_id'] = j
                     gdf.at[index, 'point_id'] = k
                     gdf.at[index, 'time'] = current_time
@@ -93,12 +101,12 @@ def download_and_save_gps_traces(place_name):
 
                     previous_point = current_point
                     previous_time = current_time
+                    save = True
+
+            if save:
+                gdf.reset_index(drop=True).to_feather(output_path)
 
             page += 1  # Increment page number for the next request
-            gdf[gdf['speed'] <= 10]\
-                .to_crs(epsg=26910)\
-                .reset_index(drop=True)\
-                .to_feather(output_path)
 
 
 def calculate_speed(point1, point2, time1, time2):
