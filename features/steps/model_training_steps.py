@@ -67,6 +67,8 @@ def step_impl(state):
 	if not hasattr(state, "trained"):
 		state.trained = {}
 	for model in os.listdir(state.predictors):
+		if ".pkl" not in model:
+			continue
 		state.trained[model] = load_pickle(f"{state.predictors}/{model}")
 		pass
 
@@ -96,11 +98,13 @@ def step_impl(state, count):
 	gdf = read_samples(state.parcel_samples)
 	features = read_important_features(state.importance, count)
 	predictors = read_predictors(state.predictors)
-	for feature in features:
-		plot_choropleth_map(gdf, feature, state.maps)
-	for predictor in predictors:
-		predictor.plot_partial_dependence(state.dependencies, features)
+	assert (len(features) == len(predictors))
+
+	for i, feature_set in enumerate(features):
+		[plot_choropleth_map(gdf, feature, state.maps) for feature in feature_set ]
+		predictors[i].plot_partial_dependence(state.dependencies, feature_set)
 	assert (len(os.listdir(state.maps)) > 0)
+	assert (len(os.listdir(state.dependencies)) > 0)
 
 
 @step("copy outputs to manuscript path")
@@ -122,15 +126,18 @@ def read_samples(samples_path):
 
 
 def read_predictors(predictors_dir):
-	return [load_pickle(f"{predictors_dir}/{model}") for model in os.listdir(predictors_dir)]
+	return [load_pickle(f"{predictors_dir}/{model}") for model in os.listdir(predictors_dir) if ".pkl" in model]
 
 
 def read_important_features(importance_dir, feature_count):
-	all_dependencies = [
-		pd.read_csv(f"{importance_dir}/{file}", encoding="latin1")
-		for file in os.listdir(importance_dir) if ".csv" in file
-	]
-	importance_df = pd.concat(all_dependencies)\
-		.groupby('feature', as_index=False).sum()\
-		.sort_values('dependencies', ascending=False)
-	return list(importance_df.head(int(feature_count)).feature)
+	features_nested_list = []
+	for file in os.listdir(importance_dir):
+		if ".csv" not in file:
+			continue
+		features_nested_list.append(list(
+			pd.read_csv(f"{importance_dir}/{file}", encoding="latin1")
+			.groupby('feature', as_index=False).sum()
+			.sort_values('dependencies', ascending=False)
+			.head(int(feature_count)).feature
+		))
+	return features_nested_list

@@ -6,7 +6,8 @@ import geopandas as gpd
 def read_gdf(path):
     if not os.path.exists(path):
         raise FileNotFoundError(path)
-    return gpd.read_feather(path)
+    gdf = gpd.read_feather(path)
+    return gdf[gdf.geometry.is_valid]
 
 
 def gdf_box_contains(container, contained):

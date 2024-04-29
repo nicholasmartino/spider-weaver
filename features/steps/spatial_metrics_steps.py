@@ -13,14 +13,16 @@ pd.set_option('display.width', 1000)
 def step_impl(context, data_frame, city):
 	context.city = city
 	data_gdf = read_feather(f"{context.city}/{data_frame}").to_crs(26910)
-	boundary_gdf = get_city_boundary_gdf(context.city).to_crs(26910)
+	boundary_gdf = read_feather(f"{context.city}/boundary").to_crs(26910)
+
 	assert (boundary_gdf is not None)
 	assert (gdf_box_overlaps(boundary_gdf, data_gdf))
+	overlay = gpd.overlay(data_gdf, boundary_gdf)
 
 	if not hasattr(context, 'data'):
 		context.gdf_db = {}
 	context.gdf_db[city] = boundary_gdf
-	context.gdf_db[data_frame] = data_gdf.copy().reset_index(drop=True)
+	context.gdf_db[data_frame] = overlay.copy().reset_index(drop=True)
 	pass
 
 

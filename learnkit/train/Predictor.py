@@ -104,7 +104,5 @@ class Predictor:
 
 
 def load_pickle(path):
-    if '.pkl' not in path:
-        raise ValueError('File is not valid')
     with open(path, "rb") as file:
         return pickle.load(file)
