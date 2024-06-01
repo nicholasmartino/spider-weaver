@@ -87,6 +87,7 @@ def step_impl(state):
 	directory = state.importance
 	predictors = read_predictors(state.predictors)
 	check_and_clean_path(directory)
+
 	for predictor in predictors:
 		df = predictor.get_permutation_importance()
 		df.to_csv(f"{directory}/{predictor.predicted}.csv")
@@ -101,7 +102,8 @@ def step_impl(state, count):
 	assert (len(features) == len(predictors))
 
 	for i, feature_set in enumerate(features):
-		[plot_choropleth_map(gdf, feature, state.maps) for feature in feature_set ]
+		predicted = [p.predicted for p in predictors]
+		[plot_choropleth_map(gdf, feature, state.maps) for feature in feature_set + predicted]
 		predictors[i].plot_partial_dependence(state.dependencies, feature_set)
 	assert (len(os.listdir(state.maps)) > 0)
 	assert (len(os.listdir(state.dependencies)) > 0)
@@ -113,8 +115,10 @@ def step_impl(state):
 	processed_directory = f"data/{state.city}/{folder_name}"
 	manuscript_directory = f"{get_assets_directory()}/images"
 	training_directory = f"{manuscript_directory}/training"
+
 	if os.path.exists(training_directory):
 		shutil.rmtree(training_directory)
+
 	assert (os.path.exists(processed_directory))
 	assert (os.path.exists(manuscript_directory))
 	shutil.copytree(processed_directory, training_directory)
