@@ -1,0 +1,650 @@
+<!DOCTYPE model>
+<Option type="Map">
+  <Option name="children" type="Map">
+    <Option name="grass7:v.out.dxf_1" type="Map">
+      <Option name="active" value="false" type="bool"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" value="grass7:v.out.dxf" type="QString"/>
+      <Option name="component_description" value="ExportDXF_CIP" type="QString"/>
+      <Option name="component_pos_x" value="848.8545784265157" type="double"/>
+      <Option name="component_pos_y" value="791.0949870966458" type="double"/>
+      <Option name="dependencies"/>
+      <Option name="id" value="grass7:v.out.dxf_1" type="QString"/>
+      <Option name="outputs" type="Map">
+        <Option name="Kneesovist_CIP" type="Map">
+          <Option name="child_id" value="grass7:v.out.dxf_1" type="QString"/>
+          <Option name="component_description" value="Kneesovist_CIP" type="QString"/>
+          <Option name="component_pos_x" value="1072.3396288739968" type="double"/>
+          <Option name="component_pos_y" value="841.2053334293287" type="double"/>
+          <Option name="name" value="Kneesovist_CIP" type="QString"/>
+          <Option name="output_name" value="output" type="QString"/>
+        </Option>
+      </Option>
+      <Option name="outputs_collapsed" value="true" type="bool"/>
+      <Option name="parameters_collapsed" value="true" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="GRASS_MIN_AREA_PARAMETER" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="0.0001" type="double"/>
+          </Option>
+        </Option>
+        <Option name="GRASS_REGION_PARAMETER" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="" type="Unknown"/>
+          </Option>
+        </Option>
+        <Option name="GRASS_SNAP_TOLERANCE_PARAMETER" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="-1" type="double"/>
+          </Option>
+        </Option>
+        <Option name="input" type="List">
+          <Option type="Map">
+            <Option name="child_id" value="native:extractbyattribute_1" type="QString"/>
+            <Option name="output_name" value="OUTPUT" type="QString"/>
+            <Option name="source" value="1" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="grass7:v.out.dxf_2" type="Map">
+      <Option name="active" value="false" type="bool"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" value="grass7:v.out.dxf" type="QString"/>
+      <Option name="component_description" value="ExportDXF_SFC" type="QString"/>
+      <Option name="component_pos_x" value="846.6694013922738" type="double"/>
+      <Option name="component_pos_y" value="712.3608790600933" type="double"/>
+      <Option name="dependencies"/>
+      <Option name="id" value="grass7:v.out.dxf_2" type="QString"/>
+      <Option name="outputs" type="Map">
+        <Option name="Kneesovist_SFC" type="Map">
+          <Option name="child_id" value="grass7:v.out.dxf_2" type="QString"/>
+          <Option name="component_description" value="Kneesovist_SFC" type="QString"/>
+          <Option name="component_pos_x" value="1081.0257144516254" type="double"/>
+          <Option name="component_pos_y" value="762.2689237828579" type="double"/>
+          <Option name="name" value="Kneesovist_SFC" type="QString"/>
+          <Option name="output_name" value="output" type="QString"/>
+        </Option>
+      </Option>
+      <Option name="outputs_collapsed" value="true" type="bool"/>
+      <Option name="parameters_collapsed" value="true" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="GRASS_MIN_AREA_PARAMETER" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="0.0001" type="double"/>
+          </Option>
+        </Option>
+        <Option name="GRASS_REGION_PARAMETER" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="" type="Unknown"/>
+          </Option>
+        </Option>
+        <Option name="GRASS_SNAP_TOLERANCE_PARAMETER" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="-1" type="double"/>
+          </Option>
+        </Option>
+        <Option name="input" type="List">
+          <Option type="Map">
+            <Option name="child_id" value="native:extractbyattribute_1" type="QString"/>
+            <Option name="output_name" value="FAIL_OUTPUT" type="QString"/>
+            <Option name="source" value="1" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="grass7:v.out.dxf_3" type="Map">
+      <Option name="active" value="false" type="bool"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" value="grass7:v.out.dxf" type="QString"/>
+      <Option name="component_description" value="v.out.dxf - Exports GRASS vector map layers to DXF file format." type="QString"/>
+      <Option name="component_pos_x" value="1081.2736078695852" type="double"/>
+      <Option name="component_pos_y" value="143.6137878356106" type="double"/>
+      <Option name="dependencies"/>
+      <Option name="id" value="grass7:v.out.dxf_3" type="QString"/>
+      <Option name="outputs" type="Map">
+        <Option name="Eyesovist_CIP" type="Map">
+          <Option name="child_id" value="grass7:v.out.dxf_3" type="QString"/>
+          <Option name="component_description" value="Eyesovist_CIP" type="QString"/>
+          <Option name="component_pos_x" value="1271.4575184240566" type="double"/>
+          <Option name="component_pos_y" value="187.63217889105772" type="double"/>
+          <Option name="name" value="Eyesovist_CIP" type="QString"/>
+          <Option name="output_name" value="output" type="QString"/>
+        </Option>
+      </Option>
+      <Option name="outputs_collapsed" value="true" type="bool"/>
+      <Option name="parameters_collapsed" value="true" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="GRASS_MIN_AREA_PARAMETER" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="0.0001" type="double"/>
+          </Option>
+        </Option>
+        <Option name="GRASS_REGION_PARAMETER" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="" type="Unknown"/>
+          </Option>
+        </Option>
+        <Option name="GRASS_SNAP_TOLERANCE_PARAMETER" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="-1" type="double"/>
+          </Option>
+        </Option>
+        <Option name="input" type="List">
+          <Option type="Map">
+            <Option name="child_id" value="native:extractbyattribute_2" type="QString"/>
+            <Option name="output_name" value="OUTPUT" type="QString"/>
+            <Option name="source" value="1" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="grass7:v.out.dxf_4" type="Map">
+      <Option name="active" value="false" type="bool"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" value="grass7:v.out.dxf" type="QString"/>
+      <Option name="component_description" value="v.out.dxf - Exports GRASS vector map layers to DXF file format." type="QString"/>
+      <Option name="component_pos_x" value="1062.9309075254987" type="double"/>
+      <Option name="component_pos_y" value="235.31096168167358" type="double"/>
+      <Option name="dependencies"/>
+      <Option name="id" value="grass7:v.out.dxf_4" type="QString"/>
+      <Option name="outputs" type="Map">
+        <Option name="Eyesovist_SFC" type="Map">
+          <Option name="child_id" value="grass7:v.out.dxf_4" type="QString"/>
+          <Option name="component_description" value="Eyesovist_SFC" type="QString"/>
+          <Option name="component_pos_x" value="1279.544848657557" type="double"/>
+          <Option name="component_pos_y" value="289.31953094845676" type="double"/>
+          <Option name="name" value="Eyesovist_SFC" type="QString"/>
+          <Option name="output_name" value="output" type="QString"/>
+        </Option>
+      </Option>
+      <Option name="outputs_collapsed" value="true" type="bool"/>
+      <Option name="parameters_collapsed" value="true" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="GRASS_MIN_AREA_PARAMETER" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="0.0001" type="double"/>
+          </Option>
+        </Option>
+        <Option name="GRASS_REGION_PARAMETER" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="" type="Unknown"/>
+          </Option>
+        </Option>
+        <Option name="GRASS_SNAP_TOLERANCE_PARAMETER" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="-1" type="double"/>
+          </Option>
+        </Option>
+        <Option name="input" type="List">
+          <Option type="Map">
+            <Option name="child_id" value="native:extractbyattribute_2" type="QString"/>
+            <Option name="output_name" value="FAIL_OUTPUT" type="QString"/>
+            <Option name="source" value="1" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="grass7:v.out.dxf_5" type="Map">
+      <Option name="active" value="true" type="bool"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" value="grass7:v.out.dxf" type="QString"/>
+      <Option name="component_description" value="v.out.dxf - Exports GRASS vector map layers to DXF file format." type="QString"/>
+      <Option name="component_pos_x" value="1313" type="double"/>
+      <Option name="component_pos_y" value="646" type="double"/>
+      <Option name="dependencies"/>
+      <Option name="id" value="grass7:v.out.dxf_5" type="QString"/>
+      <Option name="outputs" type="Map">
+        <Option name="LEyesovist_SFC" type="Map">
+          <Option name="child_id" value="grass7:v.out.dxf_5" type="QString"/>
+          <Option name="component_description" value="LEyesovist_SFC" type="QString"/>
+          <Option name="component_pos_x" value="1513" type="double"/>
+          <Option name="component_pos_y" value="691" type="double"/>
+          <Option name="name" value="LEyesovist_SFC" type="QString"/>
+          <Option name="output_name" value="output" type="QString"/>
+        </Option>
+      </Option>
+      <Option name="outputs_collapsed" value="true" type="bool"/>
+      <Option name="parameters_collapsed" value="true" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="GRASS_MIN_AREA_PARAMETER" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="0.0001" type="double"/>
+          </Option>
+        </Option>
+        <Option name="GRASS_REGION_PARAMETER" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="" type="Unknown"/>
+          </Option>
+        </Option>
+        <Option name="GRASS_SNAP_TOLERANCE_PARAMETER" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="-1" type="double"/>
+          </Option>
+        </Option>
+        <Option name="input" type="List">
+          <Option type="Map">
+            <Option name="child_id" value="native:extractbyexpression_3" type="QString"/>
+            <Option name="output_name" value="FAIL_OUTPUT" type="QString"/>
+            <Option name="source" value="1" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="grass7:v.out.dxf_6" type="Map">
+      <Option name="active" value="false" type="bool"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" value="grass7:v.out.dxf" type="QString"/>
+      <Option name="component_description" value="v.out.dxf - Exports GRASS vector map layers to DXF file format." type="QString"/>
+      <Option name="component_pos_x" value="1306" type="double"/>
+      <Option name="component_pos_y" value="492" type="double"/>
+      <Option name="dependencies"/>
+      <Option name="id" value="grass7:v.out.dxf_6" type="QString"/>
+      <Option name="outputs" type="Map">
+        <Option name="LEyesovist_CIP" type="Map">
+          <Option name="child_id" value="grass7:v.out.dxf_6" type="QString"/>
+          <Option name="component_description" value="LEyesovist_CIP" type="QString"/>
+          <Option name="component_pos_x" value="1506" type="double"/>
+          <Option name="component_pos_y" value="537" type="double"/>
+          <Option name="name" value="LEyesovist_CIP" type="QString"/>
+          <Option name="output_name" value="output" type="QString"/>
+        </Option>
+      </Option>
+      <Option name="outputs_collapsed" value="true" type="bool"/>
+      <Option name="parameters_collapsed" value="true" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="GRASS_MIN_AREA_PARAMETER" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="0.0001" type="double"/>
+          </Option>
+        </Option>
+        <Option name="GRASS_REGION_PARAMETER" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="" type="Unknown"/>
+          </Option>
+        </Option>
+        <Option name="GRASS_SNAP_TOLERANCE_PARAMETER" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="-1" type="double"/>
+          </Option>
+        </Option>
+        <Option name="input" type="List">
+          <Option type="Map">
+            <Option name="child_id" value="native:extractbyexpression_3" type="QString"/>
+            <Option name="output_name" value="OUTPUT" type="QString"/>
+            <Option name="source" value="1" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="native:extractbyattribute_1" type="Map">
+      <Option name="active" value="true" type="bool"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" value="native:extractbyattribute" type="QString"/>
+      <Option name="component_description" value="Extract_CIP-Kneesovist" type="QString"/>
+      <Option name="component_pos_x" value="625.2330402061277" type="double"/>
+      <Option name="component_pos_y" value="629.7701198395253" type="double"/>
+      <Option name="dependencies"/>
+      <Option name="id" value="native:extractbyattribute_1" type="QString"/>
+      <Option name="outputs"/>
+      <Option name="outputs_collapsed" value="true" type="bool"/>
+      <Option name="parameters_collapsed" value="true" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="FIELD" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="city" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option name="child_id" value="native:mergevectorlayers_1" type="QString"/>
+            <Option name="output_name" value="OUTPUT" type="QString"/>
+            <Option name="source" value="1" type="int"/>
+          </Option>
+        </Option>
+        <Option name="OPERATOR" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="0" type="int"/>
+          </Option>
+        </Option>
+        <Option name="VALUE" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="Rio de Janeiro" type="QString"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="native:extractbyattribute_2" type="Map">
+      <Option name="active" value="true" type="bool"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" value="native:extractbyattribute" type="QString"/>
+      <Option name="component_description" value="Extract_CIP-Eyesovist" type="QString"/>
+      <Option name="component_pos_x" value="874.1379874755994" type="double"/>
+      <Option name="component_pos_y" value="71.34943005349493" type="double"/>
+      <Option name="dependencies"/>
+      <Option name="id" value="native:extractbyattribute_2" type="QString"/>
+      <Option name="outputs"/>
+      <Option name="outputs_collapsed" value="true" type="bool"/>
+      <Option name="parameters_collapsed" value="true" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="FIELD" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="city" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option name="child_id" value="native:extractbyexpression_1" type="QString"/>
+            <Option name="output_name" value="OUTPUT" type="QString"/>
+            <Option name="source" value="1" type="int"/>
+          </Option>
+        </Option>
+        <Option name="OPERATOR" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="0" type="int"/>
+          </Option>
+        </Option>
+        <Option name="VALUE" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="Rio de Janeiro" type="QString"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="native:extractbyexpression_1" type="Map">
+      <Option name="active" value="true" type="bool"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" value="native:extractbyexpression" type="QString"/>
+      <Option name="component_description" value="VisualObstacles" type="QString"/>
+      <Option name="component_pos_x" value="677.5817398879444" type="double"/>
+      <Option name="component_pos_y" value="119.33566404178288" type="double"/>
+      <Option name="dependencies"/>
+      <Option name="id" value="native:extractbyexpression_1" type="QString"/>
+      <Option name="outputs"/>
+      <Option name="outputs_collapsed" value="true" type="bool"/>
+      <Option name="parameters_collapsed" value="true" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="EXPRESSION" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="&quot;Layer&quot; = 'building' OR &quot;Layer&quot; = 'tree' OR &quot;Type&quot; = 'B' OR &quot;Layer&quot; = 'eyesovist'" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option name="child_id" value="native:mergevectorlayers_1" type="QString"/>
+            <Option name="output_name" value="OUTPUT" type="QString"/>
+            <Option name="source" value="1" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="native:extractbyexpression_2" type="Map">
+      <Option name="active" value="true" type="bool"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" value="native:extractbyexpression" type="QString"/>
+      <Option name="component_description" value="Extract by expression" type="QString"/>
+      <Option name="component_pos_x" value="684" type="double"/>
+      <Option name="component_pos_y" value="468" type="double"/>
+      <Option name="dependencies"/>
+      <Option name="id" value="native:extractbyexpression_2" type="QString"/>
+      <Option name="outputs"/>
+      <Option name="outputs_collapsed" value="true" type="bool"/>
+      <Option name="parameters_collapsed" value="true" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="EXPRESSION" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="&quot;Layer&quot; = 'kneesovist' OR &quot;Layer&quot; = 'building' OR &quot;Layer&quot; = 'tree' OR &quot;Type&quot; = 'B'" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option name="child_id" value="native:mergevectorlayers_1" type="QString"/>
+            <Option name="output_name" value="OUTPUT" type="QString"/>
+            <Option name="source" value="1" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="native:extractbyexpression_3" type="Map">
+      <Option name="active" value="true" type="bool"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" value="native:extractbyexpression" type="QString"/>
+      <Option name="component_description" value="Extract_CIP-LEyesovist" type="QString"/>
+      <Option name="component_pos_x" value="985" type="double"/>
+      <Option name="component_pos_y" value="513" type="double"/>
+      <Option name="dependencies"/>
+      <Option name="id" value="native:extractbyexpression_3" type="QString"/>
+      <Option name="outputs"/>
+      <Option name="outputs_collapsed" value="true" type="bool"/>
+      <Option name="parameters_collapsed" value="true" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="EXPRESSION" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" value="&quot;city&quot; = 'Rio de Janeiro'" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option name="child_id" value="native:extractbylocation_1" type="QString"/>
+            <Option name="output_name" value="OUTPUT" type="QString"/>
+            <Option name="source" value="1" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="native:extractbylocation_1" type="Map">
+      <Option name="active" value="true" type="bool"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" value="native:extractbylocation" type="QString"/>
+      <Option name="component_description" value="Extract by location" type="QString"/>
+      <Option name="component_pos_x" value="988" type="double"/>
+      <Option name="component_pos_y" value="425" type="double"/>
+      <Option name="dependencies"/>
+      <Option name="id" value="native:extractbylocation_1" type="QString"/>
+      <Option name="outputs"/>
+      <Option name="outputs_collapsed" value="true" type="bool"/>
+      <Option name="parameters_collapsed" value="true" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option name="child_id" value="native:mergevectorlayers_1" type="QString"/>
+            <Option name="output_name" value="OUTPUT" type="QString"/>
+            <Option name="source" value="1" type="int"/>
+          </Option>
+        </Option>
+        <Option name="INTERSECT" type="List">
+          <Option type="Map">
+            <Option name="child_id" value="native:extractbyexpression_2" type="QString"/>
+            <Option name="output_name" value="OUTPUT" type="QString"/>
+            <Option name="source" value="1" type="int"/>
+          </Option>
+        </Option>
+        <Option name="PREDICATE" type="List">
+          <Option type="Map">
+            <Option name="source" value="2" type="int"/>
+            <Option name="static_value" type="List">
+              <Option value="6" type="int"/>
+            </Option>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="native:fixgeometries_2" type="Map">
+      <Option name="active" value="true" type="bool"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" value="native:fixgeometries" type="QString"/>
+      <Option name="component_description" value="Fix_Interfaces" type="QString"/>
+      <Option name="component_pos_x" value="228.06734713102472" type="double"/>
+      <Option name="component_pos_y" value="107.28834350048548" type="double"/>
+      <Option name="dependencies"/>
+      <Option name="id" value="native:fixgeometries_2" type="QString"/>
+      <Option name="outputs"/>
+      <Option name="outputs_collapsed" value="true" type="bool"/>
+      <Option name="parameters_collapsed" value="true" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option name="parameter_name" value="interfaces" type="QString"/>
+            <Option name="source" value="0" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="native:fixgeometries_4" type="Map">
+      <Option name="active" value="true" type="bool"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" value="native:fixgeometries" type="QString"/>
+      <Option name="component_description" value="Fix_Obstacles" type="QString"/>
+      <Option name="component_pos_x" value="146.1240404330843" type="double"/>
+      <Option name="component_pos_y" value="251.88074014927278" type="double"/>
+      <Option name="dependencies"/>
+      <Option name="id" value="native:fixgeometries_4" type="QString"/>
+      <Option name="outputs"/>
+      <Option name="outputs_collapsed" value="true" type="bool"/>
+      <Option name="parameters_collapsed" value="true" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option name="parameter_name" value="obstacles" type="QString"/>
+            <Option name="source" value="0" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="native:mergevectorlayers_1" type="Map">
+      <Option name="active" value="true" type="bool"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" value="native:mergevectorlayers" type="QString"/>
+      <Option name="component_description" value="Merge" type="QString"/>
+      <Option name="component_pos_x" value="385.723416568956" type="double"/>
+      <Option name="component_pos_y" value="384.8213118373485" type="double"/>
+      <Option name="dependencies"/>
+      <Option name="id" value="native:mergevectorlayers_1" type="QString"/>
+      <Option name="outputs"/>
+      <Option name="outputs_collapsed" value="true" type="bool"/>
+      <Option name="parameters_collapsed" value="true" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="CRS" type="List">
+          <Option type="Map">
+            <Option name="child_id" value="qgis:polygonstolines_1" type="QString"/>
+            <Option name="output_name" value="OUTPUT" type="QString"/>
+            <Option name="source" value="1" type="int"/>
+          </Option>
+        </Option>
+        <Option name="LAYERS" type="List">
+          <Option type="Map">
+            <Option name="child_id" value="native:fixgeometries_2" type="QString"/>
+            <Option name="output_name" value="OUTPUT" type="QString"/>
+            <Option name="source" value="1" type="int"/>
+          </Option>
+          <Option type="Map">
+            <Option name="child_id" value="qgis:polygonstolines_1" type="QString"/>
+            <Option name="output_name" value="OUTPUT" type="QString"/>
+            <Option name="source" value="1" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="qgis:polygonstolines_1" type="Map">
+      <Option name="active" value="true" type="bool"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" value="qgis:polygonstolines" type="QString"/>
+      <Option name="component_description" value="Pol-Line" type="QString"/>
+      <Option name="component_pos_x" value="155.59234039705024" type="double"/>
+      <Option name="component_pos_y" value="323.1718522401193" type="double"/>
+      <Option name="dependencies"/>
+      <Option name="id" value="qgis:polygonstolines_1" type="QString"/>
+      <Option name="outputs"/>
+      <Option name="outputs_collapsed" value="true" type="bool"/>
+      <Option name="parameters_collapsed" value="true" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option name="child_id" value="native:fixgeometries_4" type="QString"/>
+            <Option name="output_name" value="OUTPUT" type="QString"/>
+            <Option name="source" value="1" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+  </Option>
+  <Option name="help"/>
+  <Option name="model_group" value="Space Syntax" type="QString"/>
+  <Option name="model_name" value="ExportDXF" type="QString"/>
+  <Option name="parameterDefinitions" type="Map">
+    <Option name="grass7:v.out.dxf_5:LEyesovist_SFC" type="Map">
+      <Option name="create_by_default" value="true" type="bool"/>
+      <Option name="default" value="" type="Unknown"/>
+      <Option name="description" value="LEyesovist_SFC" type="QString"/>
+      <Option name="file_filter" value="Dxf files (*.dxf)" type="QString"/>
+      <Option name="flags" value="0" type="int"/>
+      <Option name="metadata"/>
+      <Option name="name" value="grass7:v.out.dxf_5:LEyesovist_SFC" type="QString"/>
+      <Option name="parameter_type" value="fileDestination" type="QString"/>
+      <Option name="supports_non_file_outputs" value="false" type="bool"/>
+    </Option>
+    <Option name="interfaces" type="Map">
+      <Option name="data_types" type="List">
+        <Option value="5" type="int"/>
+      </Option>
+      <Option name="default" value="" type="Unknown"/>
+      <Option name="description" value="Interfaces" type="QString"/>
+      <Option name="flags" value="0" type="int"/>
+      <Option name="metadata"/>
+      <Option name="name" value="interfaces" type="QString"/>
+      <Option name="parameter_type" value="vector" type="QString"/>
+    </Option>
+    <Option name="obstacles" type="Map">
+      <Option name="data_types" type="List">
+        <Option value="2" type="int"/>
+      </Option>
+      <Option name="default" value="" type="Unknown"/>
+      <Option name="description" value="Obstacles" type="QString"/>
+      <Option name="flags" value="0" type="int"/>
+      <Option name="metadata"/>
+      <Option name="name" value="obstacles" type="QString"/>
+      <Option name="parameter_type" value="vector" type="QString"/>
+    </Option>
+  </Option>
+  <Option name="parameters" type="Map">
+    <Option name="interfaces" type="Map">
+      <Option name="component_description" value="interfaces" type="QString"/>
+      <Option name="component_pos_x" value="196.5374954417853" type="double"/>
+      <Option name="component_pos_y" value="43.787138788967965" type="double"/>
+      <Option name="name" value="interfaces" type="QString"/>
+    </Option>
+    <Option name="obstacles" type="Map">
+      <Option name="component_description" value="obstacles" type="QString"/>
+      <Option name="component_pos_x" value="130.46027000069927" type="double"/>
+      <Option name="component_pos_y" value="181.47217364977948" type="double"/>
+      <Option name="name" value="obstacles" type="QString"/>
+    </Option>
+  </Option>
+</Option>

@@ -1,0 +1,727 @@
+<!DOCTYPE model>
+<Option type="Map">
+  <Option name="children" type="Map">
+    <Option name="model:Proximity_1" type="Map">
+      <Option value="true" name="active" type="bool"/>
+      <Option name="alg_config"/>
+      <Option value="model:Proximity" name="alg_id" type="QString"/>
+      <Option value="Daily600m" name="component_description" type="QString"/>
+      <Option value="1109" name="component_pos_x" type="double"/>
+      <Option value="254" name="component_pos_y" type="double"/>
+      <Option name="dependencies"/>
+      <Option value="model:Proximity_1" name="id" type="QString"/>
+      <Option name="outputs" type="Map">
+        <Option name="Daily600m" type="Map">
+          <Option value="model:Proximity_1" name="child_id" type="QString"/>
+          <Option value="Daily600m" name="component_description" type="QString"/>
+          <Option value="1348" name="component_pos_x" type="double"/>
+          <Option value="91" name="component_pos_y" type="double"/>
+          <Option value="Daily600m" name="name" type="QString"/>
+          <Option value="qgis:deletecolumn_2:Output" name="output_name" type="QString"/>
+        </Option>
+      </Option>
+      <Option value="true" name="outputs_collapsed" type="bool"/>
+      <Option value="true" name="parameters_collapsed" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="boundary" type="List">
+          <Option type="Map">
+            <Option value="native:extractbyexpression_1" name="child_id" type="QString"/>
+            <Option value="OUTPUT" name="output_name" type="QString"/>
+            <Option value="1" name="source" type="int"/>
+          </Option>
+        </Option>
+        <Option name="catchment" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="600" name="static_value" type="double"/>
+          </Option>
+        </Option>
+        <Option name="expression" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="&quot;amenity&quot;= 'atm' OR &quot;amenity&quot;= 'bank' OR &quot;amenity&quot;= 'bar' OR &quot;amenity&quot;= 'cafe' OR &quot;amenity&quot;= 'cinema' OR &quot;amenity&quot;= 'food_court' OR &quot;amenity&quot;= 'fuel' OR &quot;amenity&quot;= 'ice_cream' OR &quot;amenity&quot;= 'internet_cafe' OR &quot;amenity&quot;= 'marketplace' OR &quot;amenity&quot;= 'pharmacy' OR &quot;amenity&quot;= 'pub' OR &quot;amenity&quot;= 'restaurant'" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="fieldname" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="Daily600m" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="osmpointdata" type="List">
+          <Option type="Map">
+            <Option value="osmpointdata" name="parameter_name" type="QString"/>
+            <Option value="0" name="source" type="int"/>
+          </Option>
+        </Option>
+        <Option name="streetnetwork" type="List">
+          <Option type="Map">
+            <Option value="streetnetwork" name="parameter_name" type="QString"/>
+            <Option value="0" name="source" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="model:Proximity_2" type="Map">
+      <Option value="true" name="active" type="bool"/>
+      <Option name="alg_config"/>
+      <Option value="model:Proximity" name="alg_id" type="QString"/>
+      <Option value="Civic600m" name="component_description" type="QString"/>
+      <Option value="1115" name="component_pos_x" type="double"/>
+      <Option value="363" name="component_pos_y" type="double"/>
+      <Option name="dependencies"/>
+      <Option value="model:Proximity_2" name="id" type="QString"/>
+      <Option name="outputs" type="Map">
+        <Option name="Civic600m" type="Map">
+          <Option value="model:Proximity_2" name="child_id" type="QString"/>
+          <Option value="Civic600m" name="component_description" type="QString"/>
+          <Option value="1375" name="component_pos_x" type="double"/>
+          <Option value="234" name="component_pos_y" type="double"/>
+          <Option value="Civic600m" name="name" type="QString"/>
+          <Option value="qgis:deletecolumn_1:Output" name="output_name" type="QString"/>
+        </Option>
+      </Option>
+      <Option value="true" name="outputs_collapsed" type="bool"/>
+      <Option value="true" name="parameters_collapsed" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="boundary" type="List">
+          <Option type="Map">
+            <Option value="native:extractbyexpression_1" name="child_id" type="QString"/>
+            <Option value="OUTPUT" name="output_name" type="QString"/>
+            <Option value="1" name="source" type="int"/>
+          </Option>
+        </Option>
+        <Option name="catchment" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="600" name="static_value" type="double"/>
+          </Option>
+        </Option>
+        <Option name="expression" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="&quot;amenity&quot; = 'community_centre' OR &quot;amenity&quot; = 'courthouse' OR &quot;amenity&quot; = 'shelter' OR &quot;amenity&quot; = 'social_centre' OR &quot;amenity&quot; = 'social_facility'" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="fieldname" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="Civic600m" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="osmpointdata" type="List">
+          <Option type="Map">
+            <Option value="osmpointdata" name="parameter_name" type="QString"/>
+            <Option value="0" name="source" type="int"/>
+          </Option>
+        </Option>
+        <Option name="streetnetwork" type="List">
+          <Option type="Map">
+            <Option value="streetnetwork" name="parameter_name" type="QString"/>
+            <Option value="0" name="source" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="model:Proximity_3" type="Map">
+      <Option value="true" name="active" type="bool"/>
+      <Option name="alg_config"/>
+      <Option value="model:Proximity" name="alg_id" type="QString"/>
+      <Option value="Educ600m" name="component_description" type="QString"/>
+      <Option value="1111" name="component_pos_x" type="double"/>
+      <Option value="568" name="component_pos_y" type="double"/>
+      <Option name="dependencies"/>
+      <Option value="model:Proximity_3" name="id" type="QString"/>
+      <Option name="outputs" type="Map">
+        <Option name="Educ600m" type="Map">
+          <Option value="model:Proximity_3" name="child_id" type="QString"/>
+          <Option value="Educ600m" name="component_description" type="QString"/>
+          <Option value="1363" name="component_pos_x" type="double"/>
+          <Option value="664" name="component_pos_y" type="double"/>
+          <Option value="Educ600m" name="name" type="QString"/>
+          <Option value="qgis:deletecolumn_1:Output" name="output_name" type="QString"/>
+        </Option>
+      </Option>
+      <Option value="true" name="outputs_collapsed" type="bool"/>
+      <Option value="true" name="parameters_collapsed" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="boundary" type="List">
+          <Option type="Map">
+            <Option value="native:extractbyexpression_1" name="child_id" type="QString"/>
+            <Option value="OUTPUT" name="output_name" type="QString"/>
+            <Option value="1" name="source" type="int"/>
+          </Option>
+        </Option>
+        <Option name="catchment" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="600" name="static_value" type="double"/>
+          </Option>
+        </Option>
+        <Option name="expression" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="&quot;amenity&quot;= 'childcare' OR &quot;amenity&quot;= 'college'  'family_centre' OR &quot;amenity&quot;= 'kindergarten' OR &quot;amenity&quot;= 'library' OR &quot;amenity&quot;= 'police' OR &quot;amenity&quot;= 'post_box' OR &quot;amenity&quot;= 'post_office'  'safety' OR &quot;amenity&quot;= 'school' OR &quot;amenity&quot;= 'science'  'training' OR &quot;amenity&quot;= 'university'" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="fieldname" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="Educ600m" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="osmpointdata" type="List">
+          <Option type="Map">
+            <Option value="osmpointdata" name="parameter_name" type="QString"/>
+            <Option value="0" name="source" type="int"/>
+          </Option>
+        </Option>
+        <Option name="streetnetwork" type="List">
+          <Option type="Map">
+            <Option value="streetnetwork" name="parameter_name" type="QString"/>
+            <Option value="0" name="source" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="model:Proximity_4" type="Map">
+      <Option value="true" name="active" type="bool"/>
+      <Option name="alg_config"/>
+      <Option value="model:Proximity" name="alg_id" type="QString"/>
+      <Option value="Heal600m" name="component_description" type="QString"/>
+      <Option value="1119" name="component_pos_x" type="double"/>
+      <Option value="459" name="component_pos_y" type="double"/>
+      <Option name="dependencies"/>
+      <Option value="model:Proximity_4" name="id" type="QString"/>
+      <Option name="outputs" type="Map">
+        <Option name="Heal600m" type="Map">
+          <Option value="model:Proximity_4" name="child_id" type="QString"/>
+          <Option value="Heal600m" name="component_description" type="QString"/>
+          <Option value="1349" name="component_pos_x" type="double"/>
+          <Option value="555" name="component_pos_y" type="double"/>
+          <Option value="Heal600m" name="name" type="QString"/>
+          <Option value="qgis:deletecolumn_1:Output" name="output_name" type="QString"/>
+        </Option>
+      </Option>
+      <Option value="true" name="outputs_collapsed" type="bool"/>
+      <Option value="true" name="parameters_collapsed" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="boundary" type="List">
+          <Option type="Map">
+            <Option value="native:extractbyexpression_1" name="child_id" type="QString"/>
+            <Option value="OUTPUT" name="output_name" type="QString"/>
+            <Option value="1" name="source" type="int"/>
+          </Option>
+        </Option>
+        <Option name="catchment" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="600" name="static_value" type="double"/>
+          </Option>
+        </Option>
+        <Option name="expression" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="&quot;amenity&quot;= 'chiropractor'  'clinic'  'dentist'  'doctors' OR &quot;amenity&quot;= 'hospital'  'nursery' OR &quot;amenity&quot;= 'veterinary'" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="fieldname" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="Heal600m" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="osmpointdata" type="List">
+          <Option type="Map">
+            <Option value="osmpointdata" name="parameter_name" type="QString"/>
+            <Option value="0" name="source" type="int"/>
+          </Option>
+        </Option>
+        <Option name="streetnetwork" type="List">
+          <Option type="Map">
+            <Option value="streetnetwork" name="parameter_name" type="QString"/>
+            <Option value="0" name="source" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="model:Proximity_5" type="Map">
+      <Option value="true" name="active" type="bool"/>
+      <Option name="alg_config"/>
+      <Option value="model:Proximity" name="alg_id" type="QString"/>
+      <Option value="Pub600m" name="component_description" type="QString"/>
+      <Option value="1113" name="component_pos_x" type="double"/>
+      <Option value="685" name="component_pos_y" type="double"/>
+      <Option name="dependencies"/>
+      <Option value="model:Proximity_5" name="id" type="QString"/>
+      <Option name="outputs" type="Map">
+        <Option name="Pub600m" type="Map">
+          <Option value="model:Proximity_5" name="child_id" type="QString"/>
+          <Option value="Pub600m" name="component_description" type="QString"/>
+          <Option value="1389" name="component_pos_x" type="double"/>
+          <Option value="807" name="component_pos_y" type="double"/>
+          <Option value="Pub600m" name="name" type="QString"/>
+          <Option value="qgis:deletecolumn_1:Output" name="output_name" type="QString"/>
+        </Option>
+      </Option>
+      <Option value="true" name="outputs_collapsed" type="bool"/>
+      <Option value="true" name="parameters_collapsed" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="boundary" type="List">
+          <Option type="Map">
+            <Option value="native:extractbyexpression_1" name="child_id" type="QString"/>
+            <Option value="OUTPUT" name="output_name" type="QString"/>
+            <Option value="1" name="source" type="int"/>
+          </Option>
+        </Option>
+        <Option name="catchment" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="600" name="static_value" type="double"/>
+          </Option>
+        </Option>
+        <Option name="expression" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="&quot;amenity&quot;= 'public_building'" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="fieldname" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="Pub600m" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="osmpointdata" type="List">
+          <Option type="Map">
+            <Option value="osmpointdata" name="parameter_name" type="QString"/>
+            <Option value="0" name="source" type="int"/>
+          </Option>
+        </Option>
+        <Option name="streetnetwork" type="List">
+          <Option type="Map">
+            <Option value="streetnetwork" name="parameter_name" type="QString"/>
+            <Option value="0" name="source" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="native:extractbyexpression_1" type="Map">
+      <Option value="true" name="active" type="bool"/>
+      <Option name="alg_config"/>
+      <Option value="native:extractbyexpression" name="alg_id" type="QString"/>
+      <Option value="Extract by expression" name="component_description" type="QString"/>
+      <Option value="862" name="component_pos_x" type="double"/>
+      <Option value="145" name="component_pos_y" type="double"/>
+      <Option name="dependencies"/>
+      <Option value="native:extractbyexpression_1" name="id" type="QString"/>
+      <Option name="outputs" type="Map">
+        <Option name="extracted kneesovist SFC" type="Map">
+          <Option value="native:extractbyexpression_1" name="child_id" type="QString"/>
+          <Option value="extracted kneesovist SFC" name="component_description" type="QString"/>
+          <Option value="1062" name="component_pos_x" type="double"/>
+          <Option value="190" name="component_pos_y" type="double"/>
+          <Option value="extracted kneesovist SFC" name="name" type="QString"/>
+          <Option value="OUTPUT" name="output_name" type="QString"/>
+        </Option>
+      </Option>
+      <Option value="true" name="outputs_collapsed" type="bool"/>
+      <Option value="true" name="parameters_collapsed" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="EXPRESSION" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="&quot;Layer&quot; = 'kneesovist' AND &quot;city&quot; = 'Vancouver'" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option value="obstacles" name="parameter_name" type="QString"/>
+            <Option value="0" name="source" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="native:joinattributestable_1" type="Map">
+      <Option value="true" name="active" type="bool"/>
+      <Option name="alg_config"/>
+      <Option value="native:joinattributestable" name="alg_id" type="QString"/>
+      <Option value="Join1" name="component_description" type="QString"/>
+      <Option value="1468" name="component_pos_x" type="double"/>
+      <Option value="413" name="component_pos_y" type="double"/>
+      <Option name="dependencies"/>
+      <Option value="native:joinattributestable_1" name="id" type="QString"/>
+      <Option name="outputs" type="Map">
+        <Option name="j1" type="Map">
+          <Option value="native:joinattributestable_1" name="child_id" type="QString"/>
+          <Option value="j1" name="component_description" type="QString"/>
+          <Option value="1668" name="component_pos_x" type="double"/>
+          <Option value="458" name="component_pos_y" type="double"/>
+          <Option value="j1" name="name" type="QString"/>
+          <Option value="OUTPUT" name="output_name" type="QString"/>
+        </Option>
+      </Option>
+      <Option value="true" name="outputs_collapsed" type="bool"/>
+      <Option value="true" name="parameters_collapsed" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="FIELD" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="id_auto" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="FIELDS_TO_COPY" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="Civic600m" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="FIELD_2" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="id_auto" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option value="model:Proximity_1" name="child_id" type="QString"/>
+            <Option value="qgis:deletecolumn_1:Output" name="output_name" type="QString"/>
+            <Option value="1" name="source" type="int"/>
+          </Option>
+        </Option>
+        <Option name="INPUT_2" type="List">
+          <Option type="Map">
+            <Option value="model:Proximity_2" name="child_id" type="QString"/>
+            <Option value="qgis:deletecolumn_1:Output" name="output_name" type="QString"/>
+            <Option value="1" name="source" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="native:joinattributestable_2" type="Map">
+      <Option value="true" name="active" type="bool"/>
+      <Option name="alg_config"/>
+      <Option value="native:joinattributestable" name="alg_id" type="QString"/>
+      <Option value="Join2" name="component_description" type="QString"/>
+      <Option value="1690" name="component_pos_x" type="double"/>
+      <Option value="577" name="component_pos_y" type="double"/>
+      <Option name="dependencies"/>
+      <Option value="native:joinattributestable_2" name="id" type="QString"/>
+      <Option name="outputs" type="Map">
+        <Option name="j2" type="Map">
+          <Option value="native:joinattributestable_2" name="child_id" type="QString"/>
+          <Option value="j2" name="component_description" type="QString"/>
+          <Option value="1890" name="component_pos_x" type="double"/>
+          <Option value="622" name="component_pos_y" type="double"/>
+          <Option value="j2" name="name" type="QString"/>
+          <Option value="OUTPUT" name="output_name" type="QString"/>
+        </Option>
+      </Option>
+      <Option value="true" name="outputs_collapsed" type="bool"/>
+      <Option value="true" name="parameters_collapsed" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="FIELD" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="id_auto" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="FIELDS_TO_COPY" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="Heal600m" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="FIELD_2" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="id_auto" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option value="native:joinattributestable_1" name="child_id" type="QString"/>
+            <Option value="OUTPUT" name="output_name" type="QString"/>
+            <Option value="1" name="source" type="int"/>
+          </Option>
+        </Option>
+        <Option name="INPUT_2" type="List">
+          <Option type="Map">
+            <Option value="model:Proximity_4" name="child_id" type="QString"/>
+            <Option value="qgis:deletecolumn_1:Output" name="output_name" type="QString"/>
+            <Option value="1" name="source" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="native:joinattributestable_3" type="Map">
+      <Option value="true" name="active" type="bool"/>
+      <Option name="alg_config"/>
+      <Option value="native:joinattributestable" name="alg_id" type="QString"/>
+      <Option value="Join3" name="component_description" type="QString"/>
+      <Option value="1897" name="component_pos_x" type="double"/>
+      <Option value="701" name="component_pos_y" type="double"/>
+      <Option name="dependencies"/>
+      <Option value="native:joinattributestable_3" name="id" type="QString"/>
+      <Option name="outputs" type="Map">
+        <Option name="j3" type="Map">
+          <Option value="native:joinattributestable_3" name="child_id" type="QString"/>
+          <Option value="j3" name="component_description" type="QString"/>
+          <Option value="2097" name="component_pos_x" type="double"/>
+          <Option value="746" name="component_pos_y" type="double"/>
+          <Option value="j3" name="name" type="QString"/>
+          <Option value="OUTPUT" name="output_name" type="QString"/>
+        </Option>
+      </Option>
+      <Option value="true" name="outputs_collapsed" type="bool"/>
+      <Option value="true" name="parameters_collapsed" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="FIELD" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="id_auto" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="FIELDS_TO_COPY" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="Educ600m" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="FIELD_2" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="id_auto" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option value="native:joinattributestable_2" name="child_id" type="QString"/>
+            <Option value="OUTPUT" name="output_name" type="QString"/>
+            <Option value="1" name="source" type="int"/>
+          </Option>
+        </Option>
+        <Option name="INPUT_2" type="List">
+          <Option type="Map">
+            <Option value="model:Proximity_3" name="child_id" type="QString"/>
+            <Option value="qgis:deletecolumn_1:Output" name="output_name" type="QString"/>
+            <Option value="1" name="source" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="native:joinattributestable_4" type="Map">
+      <Option value="true" name="active" type="bool"/>
+      <Option name="alg_config"/>
+      <Option value="native:joinattributestable" name="alg_id" type="QString"/>
+      <Option value="Join4" name="component_description" type="QString"/>
+      <Option value="2121" name="component_pos_x" type="double"/>
+      <Option value="838" name="component_pos_y" type="double"/>
+      <Option name="dependencies"/>
+      <Option value="native:joinattributestable_4" name="id" type="QString"/>
+      <Option name="outputs" type="Map">
+        <Option name="joined_final" type="Map">
+          <Option value="native:joinattributestable_4" name="child_id" type="QString"/>
+          <Option value="joined_final" name="component_description" type="QString"/>
+          <Option value="2321" name="component_pos_x" type="double"/>
+          <Option value="883" name="component_pos_y" type="double"/>
+          <Option value="joined_final" name="name" type="QString"/>
+          <Option value="OUTPUT" name="output_name" type="QString"/>
+        </Option>
+      </Option>
+      <Option value="true" name="outputs_collapsed" type="bool"/>
+      <Option value="true" name="parameters_collapsed" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="FIELD" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="id_auto" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="FIELDS_TO_COPY" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="Pub600m" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="FIELD_2" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="id_auto" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option value="native:joinattributestable_3" name="child_id" type="QString"/>
+            <Option value="OUTPUT" name="output_name" type="QString"/>
+            <Option value="1" name="source" type="int"/>
+          </Option>
+        </Option>
+        <Option name="INPUT_2" type="List">
+          <Option type="Map">
+            <Option value="model:Proximity_5" name="child_id" type="QString"/>
+            <Option value="qgis:deletecolumn_1:Output" name="output_name" type="QString"/>
+            <Option value="1" name="source" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+  </Option>
+  <Option name="help"/>
+  <Option value="Sustainable Indicators" name="model_group" type="QString"/>
+  <Option value="Proximity All" name="model_name" type="QString"/>
+  <Option name="parameterDefinitions" type="Map">
+    <Option name="model:Proximity_2:Civic600m" type="Map">
+      <Option value="true" name="create_by_default" type="bool"/>
+      <Option value="-1" name="data_type" type="int"/>
+      <Option value="" name="default" type="Unknown"/>
+      <Option value="Civic600m" name="description" type="QString"/>
+      <Option value="0" name="flags" type="int"/>
+      <Option name="metadata"/>
+      <Option value="model:Proximity_2:Civic600m" name="name" type="QString"/>
+      <Option value="sink" name="parameter_type" type="QString"/>
+      <Option value="true" name="supports_non_file_outputs" type="bool"/>
+    </Option>
+    <Option name="model:Proximity_3:Educ600m" type="Map">
+      <Option value="true" name="create_by_default" type="bool"/>
+      <Option value="-1" name="data_type" type="int"/>
+      <Option value="" name="default" type="Unknown"/>
+      <Option value="Educ600m" name="description" type="QString"/>
+      <Option value="0" name="flags" type="int"/>
+      <Option name="metadata"/>
+      <Option value="model:Proximity_3:Educ600m" name="name" type="QString"/>
+      <Option value="sink" name="parameter_type" type="QString"/>
+      <Option value="true" name="supports_non_file_outputs" type="bool"/>
+    </Option>
+    <Option name="model:Proximity_4:Heal600m" type="Map">
+      <Option value="true" name="create_by_default" type="bool"/>
+      <Option value="-1" name="data_type" type="int"/>
+      <Option value="" name="default" type="Unknown"/>
+      <Option value="Heal600m" name="description" type="QString"/>
+      <Option value="0" name="flags" type="int"/>
+      <Option name="metadata"/>
+      <Option value="model:Proximity_4:Heal600m" name="name" type="QString"/>
+      <Option value="sink" name="parameter_type" type="QString"/>
+      <Option value="true" name="supports_non_file_outputs" type="bool"/>
+    </Option>
+    <Option name="model:Proximity_5:Pub600m" type="Map">
+      <Option value="true" name="create_by_default" type="bool"/>
+      <Option value="-1" name="data_type" type="int"/>
+      <Option value="" name="default" type="Unknown"/>
+      <Option value="Pub600m" name="description" type="QString"/>
+      <Option value="0" name="flags" type="int"/>
+      <Option name="metadata"/>
+      <Option value="model:Proximity_5:Pub600m" name="name" type="QString"/>
+      <Option value="sink" name="parameter_type" type="QString"/>
+      <Option value="true" name="supports_non_file_outputs" type="bool"/>
+    </Option>
+    <Option name="native:extractbyexpression_1:extracted kneesovist SFC" type="Map">
+      <Option value="true" name="create_by_default" type="bool"/>
+      <Option value="-1" name="data_type" type="int"/>
+      <Option value="" name="default" type="Unknown"/>
+      <Option value="extracted kneesovist SFC" name="description" type="QString"/>
+      <Option value="0" name="flags" type="int"/>
+      <Option name="metadata"/>
+      <Option value="native:extractbyexpression_1:extracted kneesovist SFC" name="name" type="QString"/>
+      <Option value="sink" name="parameter_type" type="QString"/>
+      <Option value="true" name="supports_non_file_outputs" type="bool"/>
+    </Option>
+    <Option name="native:joinattributestable_1:j1" type="Map">
+      <Option value="true" name="create_by_default" type="bool"/>
+      <Option value="-1" name="data_type" type="int"/>
+      <Option value="" name="default" type="Unknown"/>
+      <Option value="j1" name="description" type="QString"/>
+      <Option value="0" name="flags" type="int"/>
+      <Option name="metadata"/>
+      <Option value="native:joinattributestable_1:j1" name="name" type="QString"/>
+      <Option value="sink" name="parameter_type" type="QString"/>
+      <Option value="true" name="supports_non_file_outputs" type="bool"/>
+    </Option>
+    <Option name="native:joinattributestable_2:j2" type="Map">
+      <Option value="true" name="create_by_default" type="bool"/>
+      <Option value="-1" name="data_type" type="int"/>
+      <Option value="" name="default" type="Unknown"/>
+      <Option value="j2" name="description" type="QString"/>
+      <Option value="0" name="flags" type="int"/>
+      <Option name="metadata"/>
+      <Option value="native:joinattributestable_2:j2" name="name" type="QString"/>
+      <Option value="sink" name="parameter_type" type="QString"/>
+      <Option value="true" name="supports_non_file_outputs" type="bool"/>
+    </Option>
+    <Option name="native:joinattributestable_3:j3" type="Map">
+      <Option value="true" name="create_by_default" type="bool"/>
+      <Option value="-1" name="data_type" type="int"/>
+      <Option value="" name="default" type="Unknown"/>
+      <Option value="j3" name="description" type="QString"/>
+      <Option value="0" name="flags" type="int"/>
+      <Option name="metadata"/>
+      <Option value="native:joinattributestable_3:j3" name="name" type="QString"/>
+      <Option value="sink" name="parameter_type" type="QString"/>
+      <Option value="true" name="supports_non_file_outputs" type="bool"/>
+    </Option>
+    <Option name="native:joinattributestable_4:joined_final" type="Map">
+      <Option value="true" name="create_by_default" type="bool"/>
+      <Option value="-1" name="data_type" type="int"/>
+      <Option value="" name="default" type="Unknown"/>
+      <Option value="joined_final" name="description" type="QString"/>
+      <Option value="0" name="flags" type="int"/>
+      <Option name="metadata"/>
+      <Option value="native:joinattributestable_4:joined_final" name="name" type="QString"/>
+      <Option value="sink" name="parameter_type" type="QString"/>
+      <Option value="true" name="supports_non_file_outputs" type="bool"/>
+    </Option>
+    <Option name="obstacles" type="Map">
+      <Option name="data_types" type="List">
+        <Option value="2" type="int"/>
+      </Option>
+      <Option value="" name="default" type="Unknown"/>
+      <Option value="Obstacles" name="description" type="QString"/>
+      <Option value="0" name="flags" type="int"/>
+      <Option name="metadata"/>
+      <Option value="obstacles" name="name" type="QString"/>
+      <Option value="vector" name="parameter_type" type="QString"/>
+    </Option>
+    <Option name="osmpointdata" type="Map">
+      <Option name="data_types" type="List">
+        <Option value="0" type="int"/>
+      </Option>
+      <Option value="" name="default" type="Unknown"/>
+      <Option value="OSM Point Data" name="description" type="QString"/>
+      <Option value="0" name="flags" type="int"/>
+      <Option name="metadata"/>
+      <Option value="osmpointdata" name="name" type="QString"/>
+      <Option value="vector" name="parameter_type" type="QString"/>
+    </Option>
+    <Option name="streetnetwork" type="Map">
+      <Option name="data_types" type="List">
+        <Option value="1" type="int"/>
+      </Option>
+      <Option value="" name="default" type="Unknown"/>
+      <Option value="Street Network" name="description" type="QString"/>
+      <Option value="0" name="flags" type="int"/>
+      <Option name="metadata"/>
+      <Option value="streetnetwork" name="name" type="QString"/>
+      <Option value="vector" name="parameter_type" type="QString"/>
+    </Option>
+  </Option>
+  <Option name="parameters" type="Map">
+    <Option name="obstacles" type="Map">
+      <Option value="obstacles" name="component_description" type="QString"/>
+      <Option value="859" name="component_pos_x" type="double"/>
+      <Option value="73" name="component_pos_y" type="double"/>
+      <Option value="obstacles" name="name" type="QString"/>
+    </Option>
+    <Option name="osmpointdata" type="Map">
+      <Option value="osmpointdata" name="component_description" type="QString"/>
+      <Option value="681" name="component_pos_x" type="double"/>
+      <Option value="470" name="component_pos_y" type="double"/>
+      <Option value="osmpointdata" name="name" type="QString"/>
+    </Option>
+    <Option name="streetnetwork" type="Map">
+      <Option value="streetnetwork" name="component_description" type="QString"/>
+      <Option value="679" name="component_pos_x" type="double"/>
+      <Option value="396" name="component_pos_y" type="double"/>
+      <Option value="streetnetwork" name="name" type="QString"/>
+    </Option>
+  </Option>
+</Option>
