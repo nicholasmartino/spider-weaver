@@ -5,9 +5,9 @@ from behave import *
 from pandas.api import types
 
 from learnkit.train.Predictor import *
-from utils.datautils import *
-from utils.exportutils import *
-from utils.gdfutils import *
+from features.utils.datautils import *
+from features.utils.exportutils import *
+from features.utils.gdfutils import *
 
 
 @given("a dataset of georeferenced {parcel} geometries within the {city}")
