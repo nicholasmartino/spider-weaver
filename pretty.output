@@ -1,0 +1,6 @@
+Feature: Data Gathering # features/data_gathering.feature:3
+
+  Scenario: Download GPS Traces                                # features/data_gathering.feature:9
+    Given a valid place name Metro Vancouver Regional District # features/steps/data_gathering.py:158
+    Then download and save GPS traces                          # features/steps/data_gathering.py:163
+

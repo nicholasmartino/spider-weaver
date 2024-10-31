@@ -3,6 +3,8 @@ import math
 import os.path
 from itertools import product
 
+import matplotlib.pyplot as plt
+
 import geopandas as gpd
 import requests
 from behave import *
@@ -28,29 +30,44 @@ def split_bbox(total_bounds, max_size=0.25):
 
 
 def download_and_save_gps_traces(place_name):
-    nsmap = {'gpx': 'http://www.topografix.com/GPX/1/0'}
+    nsmap = {"gpx": "http://www.topografix.com/GPX/1/0"}
     boundary = get_city_boundary_gdf(place_name)
     output_path = f"data/{place_name}/open_street_map/gps_traces.feather"
     max_page = 30
 
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
     gdf = gpd.GeoDataFrame(
-        columns=['box_id', 'page', 'segment_id', 'point_id', 'time', 'speed', 'geometry'],
-        geometry='geometry',
-        crs="EPSG:4326"
+        columns=[
+            "box_id",
+            "page",
+            "segment_id",
+            "point_id",
+            "time",
+            "speed",
+            "geometry",
+        ],
+        geometry="geometry",
+        crs="EPSG:4326",
     )  # GPS data is usually in WGS 84 (EPSG:4326)
 
     if os.path.exists(output_path):
         gdf = gpd.read_feather(output_path)
 
+    existing_points = set(gdf["geometry"].apply(lambda geom: (geom.x, geom.y)))
+
     for i, bbox in enumerate(split_bbox(boundary.total_bounds)):
-        bbox_string = ','.join(map(str, bbox))
+        bbox_string = ",".join(map(str, bbox))
         page = 0
 
         while True:
             if page > max_page:
                 break
 
-            if (i in list(gdf['box_id'])) & (page in list(gdf[gdf['box_id'] == i]['page'])):
+            if (i in list(gdf["box_id"])) & (
+                page in list(gdf[gdf["box_id"] == i]["page"])
+            ):
                 page += 1
                 continue
 
@@ -59,45 +76,53 @@ def download_and_save_gps_traces(place_name):
             url = f"https://api.openstreetmap.org/api/0.6/trackpoints?bbox={bbox_string}&page={page}"
             response = requests.get(url)
             if response.status_code != 200:
-                print(f"Warning: Failed to fetch GPS data for {bbox_string} with status code {response.status_code}")
+                print(
+                    f"Warning: Failed to fetch GPS data for {bbox_string} with status code {response.status_code}"
+                )
                 break
 
             root = etree.fromstring(response.content)
-            if not root.findall('.//gpx:trkpt', namespaces=nsmap):
+            if not root.findall(".//gpx:trkpt", namespaces=nsmap):
                 break
 
-            for j, trkseg in enumerate(root.findall('.//gpx:trkseg', namespaces=nsmap)):
+            for j, trkseg in enumerate(root.findall(".//gpx:trkseg", namespaces=nsmap)):
                 previous_point = None
                 previous_time = None
 
-                for k, trkpt in enumerate(trkseg.findall('.//gpx:trkpt', namespaces=nsmap)):
+                for k, trkpt in enumerate(
+                    trkseg.findall(".//gpx:trkpt", namespaces=nsmap)
+                ):
 
-                    lat = float(trkpt.get('lat'))
-                    lon = float(trkpt.get('lon'))
+                    lat = float(trkpt.get("lat"))
+                    lon = float(trkpt.get("lon"))
                     current_point = Point(lon, lat)
 
-                    if current_point in gdf['geometry']:
+                    if (lon, lat) in existing_points:
                         continue
 
-                    time_element = trkpt.find('.//gpx:time', namespaces=nsmap)
+                    time_element = trkpt.find(".//gpx:time", namespaces=nsmap)
                     current_time = None
                     speed = None
 
                     if time_element is not None:
-                        current_time = datetime.datetime.fromisoformat(time_element.text.replace('Z', '+00:00'))
+                        current_time = datetime.datetime.fromisoformat(
+                            time_element.text.replace("Z", "+00:00")
+                        )
 
                     if previous_point is not None and previous_time is not None:
-                        speed = calculate_speed(previous_point, current_point, previous_time, current_time)
+                        speed = calculate_speed(
+                            previous_point, current_point, previous_time, current_time
+                        )
 
                     index = len(gdf)
-                    gdf.at[index, 'box_id'] = i
-                    gdf.at[index, 'page'] = page
-                    gdf.at[index, 'segment_id'] = j
-                    gdf.at[index, 'point_id'] = k
-                    gdf.at[index, 'time'] = current_time
-                    gdf.at[index, 'speed'] = speed
-                    gdf.at[index, 'geometry'] = current_point
-                    gdf.at[index, 'count'] = 1
+                    gdf.at[index, "box_id"] = i
+                    gdf.at[index, "page"] = page
+                    gdf.at[index, "segment_id"] = j
+                    gdf.at[index, "point_id"] = k
+                    gdf.at[index, "time"] = current_time
+                    gdf.at[index, "speed"] = speed
+                    gdf.at[index, "geometry"] = current_point
+                    gdf.at[index, "count"] = 1
 
                     previous_point = current_point
                     previous_time = current_time
@@ -111,6 +136,9 @@ def download_and_save_gps_traces(place_name):
 
 def download_and_save_water_bodies(place_name):
     gdf = get_water_bodies_gdf(place_name)
+    _, ax = plt.subplots()
+    gdf.plot(ax=ax)
+    plt.savefig(f"data/{place_name}/open_street_map/water_bodies.png")
     gdf.to_feather(f"data/{place_name}/open_street_map/water_bodies.feather")
     return
 
@@ -127,16 +155,16 @@ def calculate_speed(point1, point2, time1, time2):
     return math.inf
 
 
-@given('a valid place name {place_name}')
+@given("a valid place name {place_name}")
 def step_given_valid_place_name(context, place_name):
     context.place_name = place_name
 
 
-@then('download and save GPS traces')
+@then("download and save GPS traces")
 def step_then_download_and_save(context):
     download_and_save_gps_traces(context.place_name)
 
 
-@then('download and save water bodies')
-def step_then_download_and_save(context):
+@then("download and save water bodies")
+def step_then_download_and_save_water_bodies(context):
     download_and_save_water_bodies(context.place_name)

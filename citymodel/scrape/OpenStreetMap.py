@@ -4,45 +4,60 @@ import geopandas as gpd
 import requests
 import shapely.geometry as geometry
 from scipy.spatial import Delaunay
-from shapely.geometry import Polygon, LineString, Point
+from shapely.geometry import LineString, Point, Polygon
 from shapely.ops import unary_union
 
 
 def get_geometries_gdf(elements):
     geometries = []
     for element in elements:
-        if 'geometry' in element:
-            if element['type'] == 'way':
-                geom = LineString([(pt['lon'], pt['lat']) for pt in element['geometry']])
-            elif element['type'] == 'node':
-                geom = Point(element['lon'], element['lat'])
-            elif element['type'] == 'relation':
-                geom = [geometry.shape(member['geometry']) for member in element['members'] if 'geometry' in member]
+        if "geometry" in element:
+            if element["type"] == "way":
+                geom = LineString(
+                    [(pt["lon"], pt["lat"]) for pt in element["geometry"]]
+                )
+            elif element["type"] == "node":
+                geom = Point(element["lon"], element["lat"])
+            elif element["type"] == "relation":
+                geom = [
+                    geometry.shape(member["geometry"])
+                    for member in element["members"]
+                    if "geometry" in member
+                ]
                 if geom:
                     geom = unary_union(geom)
             else:
                 continue
             geometries.append(geom)
-        elif 'center' in element:
-            geom = Point(element['center']['lon'], element['center']['lat'])
+        elif "center" in element:
+            geom = Point(element["center"]["lon"], element["center"]["lat"])
             geometries.append(geom)
-    return gpd.GeoDataFrame({'geometry': geometries}, crs=4326)
+    return gpd.GeoDataFrame({"geometry": geometries}, crs=4326)
 
 
 def get_city_boundary_gdf(city):
     elements = query_elements_from_city_name(city, "boundary", "administrative")
     polygon = get_bounding_box(elements)
-    return gpd.GeoDataFrame({
-        'geometry': [polygon],
-    }, crs=4326)
+    return gpd.GeoDataFrame(
+        {
+            "geometry": [polygon],
+        },
+        crs=4326,
+    )
 
 
 def get_water_bodies_gdf(city):
     natural_tags = ["water", "bay", "strait", "coastline"]
-    waterway_tags = ["river", "riverbank", "canal", "stream"]
+    # waterway_tags = ["river", "riverbank", "canal", "stream"]
     elements = []
-    [elements.extend(query_elements_from_city_name(city, "natural", tag)) for tag in natural_tags]
-    [elements.extend(query_elements_from_city_name(city, "waterway", tag)) for tag in waterway_tags]
+    [
+        elements.extend(query_elements_from_city_name(city, "natural", tag))
+        for tag in natural_tags
+    ]
+    # [
+    #     elements.extend(query_elements_from_city_name(city, "waterway", tag))
+    #     for tag in waterway_tags
+    # ]
     return get_geometries_gdf(elements)
 
 
@@ -53,11 +68,13 @@ def distance(p1, p2):
 def get_natural_bounds(elements, tolerance=10):
     coordinates = []
     for element in elements:
-        for member in element['members']:
-            if member['type'] == 'node':
-                coordinates.append([member['lon'], member['lat']])
-            elif member['type'] in ['way']:
-                coordinates += [[pair['lon'], pair['lat']] for pair in member['geometry']]
+        for member in element["members"]:
+            if member["type"] == "node":
+                coordinates.append([member["lon"], member["lat"]])
+            elif member["type"] in ["way"]:
+                coordinates += [
+                    [pair["lon"], pair["lat"]] for pair in member["geometry"]
+                ]
 
     triangulation = Delaunay(coordinates)
 
@@ -79,19 +96,26 @@ def get_natural_bounds(elements, tolerance=10):
 
 
 def get_bounding_box(elements):
-    bbox = elements[0]['bounds']
+    bbox = elements[0]["bounds"]
     return get_polygon_from_bbox(bbox)
 
 
 def get_polygon_from_bbox(bbox):
-    min_lat, min_lon, max_lat, max_lon = bbox['minlat'], bbox['minlon'], bbox['maxlat'], bbox['maxlon']
-    return Polygon([
-        (min_lon, min_lat),
-        (min_lon, max_lat),
-        (max_lon, max_lat),
-        (max_lon, min_lat),
-        (min_lon, min_lat)
-    ])
+    min_lat, min_lon, max_lat, max_lon = (
+        bbox["minlat"],
+        bbox["minlon"],
+        bbox["maxlat"],
+        bbox["maxlon"],
+    )
+    return Polygon(
+        [
+            (min_lon, min_lat),
+            (min_lon, max_lat),
+            (max_lon, max_lat),
+            (max_lon, min_lat),
+            (min_lon, min_lat),
+        ]
+    )
 
 
 def query_elements_from_city_name(city, key, value):
@@ -112,10 +136,10 @@ def query_elements_from_city_name(city, key, value):
     out geom;
     """
 
-    response = requests.get(overpass_url, params={'data': overpass_query})
+    response = requests.get(overpass_url, params={"data": overpass_query})
     data = response.json()
 
-    if not data['elements']:
+    if not data["elements"]:
         print(Warning(f"No elements found for {key}={value} in {city}"))
 
-    return data['elements']
+    return data["elements"]
