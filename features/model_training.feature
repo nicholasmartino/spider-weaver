@@ -24,7 +24,12 @@ Feature: Urban Space Dynamics Prediction
     Then assess predictive accuracy based on the test data
     And rank explanatory variables by permutation importance
 
-  Scenario: Exporting results to external path
+  Scenario: Exporting maps to external path
     Given a predictive model trained
-    Then plot charts and maps of 6 most important variables
+    Then plot maps of 6 most important variables
+    And copy outputs to manuscript path
+
+  Scenario: Exporting significance to external path
+    Given a predictive model trained
+    Then plot significance charts of 6 most important variables
     And copy outputs to manuscript path

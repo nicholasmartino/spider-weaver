@@ -1,8 +1,7 @@
 from behave import *
 
 from citymodel.base.Network import Network
-from citymodel.scrape.OpenStreetMap import get_city_boundary_gdf
-from utils.datautils import *
+from features.utils.datautils import *
 from learnkit.train.NetworkAnalysis import *
 
 pd.set_option('display.max_columns', 10)

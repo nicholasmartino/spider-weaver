@@ -2,8 +2,12 @@
 
 Feature: Data Gathering
 
+  Scenario: Download Water Bodies
+    Given a valid place name Metro Vancouver Regional District
+    Then download and save water bodies
+
   Scenario: Download GPS Traces
-    Given a valid identification of a Metro Vancouver Regional District
+    Given a valid place name Metro Vancouver Regional District
     Then download and save GPS traces
 
   Scenario Outline: Clean and Process Street Network

@@ -10,7 +10,7 @@ from geopy.distance import geodesic
 from lxml import etree
 from shapely.geometry import Point
 
-from citymodel.scrape.OpenStreetMap import get_city_boundary_gdf
+from citymodel.scrape.OpenStreetMap import get_city_boundary_gdf, get_water_bodies_gdf
 
 
 def split_bbox(total_bounds, max_size=0.25):
@@ -109,6 +109,12 @@ def download_and_save_gps_traces(place_name):
             page += 1  # Increment page number for the next request
 
 
+def download_and_save_water_bodies(place_name):
+    gdf = get_water_bodies_gdf(place_name)
+    gdf.to_feather(f"data/{place_name}/open_street_map/water_bodies.feather")
+    return
+
+
 def calculate_speed(point1, point2, time1, time2):
     # Calculate the distance in kilometers
     distance = geodesic((point1.y, point1.x), (point2.y, point2.x)).kilometers
@@ -121,7 +127,7 @@ def calculate_speed(point1, point2, time1, time2):
     return math.inf
 
 
-@given('a valid identification of a {place_name}')
+@given('a valid place name {place_name}')
 def step_given_valid_place_name(context, place_name):
     context.place_name = place_name
 
@@ -129,3 +135,8 @@ def step_given_valid_place_name(context, place_name):
 @then('download and save GPS traces')
 def step_then_download_and_save(context):
     download_and_save_gps_traces(context.place_name)
+
+
+@then('download and save water bodies')
+def step_then_download_and_save(context):
+    download_and_save_water_bodies(context.place_name)

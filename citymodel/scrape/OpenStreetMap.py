@@ -4,16 +4,46 @@ import geopandas as gpd
 import requests
 import shapely.geometry as geometry
 from scipy.spatial import Delaunay
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, LineString, Point
 from shapely.ops import unary_union
 
 
+def get_geometries_gdf(elements):
+    geometries = []
+    for element in elements:
+        if 'geometry' in element:
+            if element['type'] == 'way':
+                geom = LineString([(pt['lon'], pt['lat']) for pt in element['geometry']])
+            elif element['type'] == 'node':
+                geom = Point(element['lon'], element['lat'])
+            elif element['type'] == 'relation':
+                geom = [geometry.shape(member['geometry']) for member in element['members'] if 'geometry' in member]
+                if geom:
+                    geom = unary_union(geom)
+            else:
+                continue
+            geometries.append(geom)
+        elif 'center' in element:
+            geom = Point(element['center']['lon'], element['center']['lat'])
+            geometries.append(geom)
+    return gpd.GeoDataFrame({'geometry': geometries}, crs=4326)
+
+
 def get_city_boundary_gdf(city):
-    elements = query_elements_from_city_name(city)
+    elements = query_elements_from_city_name(city, "boundary", "administrative")
     polygon = get_bounding_box(elements)
     return gpd.GeoDataFrame({
         'geometry': [polygon],
     }, crs=4326)
+
+
+def get_water_bodies_gdf(city):
+    natural_tags = ["water", "bay", "strait", "coastline"]
+    waterway_tags = ["river", "riverbank", "canal", "stream"]
+    elements = []
+    [elements.extend(query_elements_from_city_name(city, "natural", tag)) for tag in natural_tags]
+    [elements.extend(query_elements_from_city_name(city, "waterway", tag)) for tag in waterway_tags]
+    return get_geometries_gdf(elements)
 
 
 def distance(p1, p2):
@@ -64,15 +94,20 @@ def get_polygon_from_bbox(bbox):
     ])
 
 
-def query_elements_from_city_name(city):
+def query_elements_from_city_name(city, key, value):
     overpass_url = "http://overpass-api.de/api/interpreter"
 
-    # This query fetches the boundary of the city given its name.
+    # This query fetches the elements based on the key-value pair given the city name.
     overpass_query = f"""
     [out:json];
     area["name"="{city}"]->.searchArea;
     (
-      relation["boundary"="administrative"]["name"="{city}"](area.searchArea);
+      way["{key}"="{value}"](area.searchArea);
+      relation["{key}"="{value}"](area.searchArea);
+      way["{key}"="{value}"](area.searchArea)->.a;
+      (way.a(bn););
+      relation["{key}"="{value}"](area.searchArea)->.b;
+      (relation.b(bw););
     );
     out geom;
     """
@@ -81,6 +116,6 @@ def query_elements_from_city_name(city):
     data = response.json()
 
     if not data['elements']:
-        raise ValueError(f"No boundary found for {city}")
+        print(Warning(f"No elements found for {key}={value} in {city}"))
 
     return data['elements']

@@ -4,29 +4,30 @@ import shutil
 from behave import *
 from pandas.api import types
 
-from learnkit.train.Predictor import *
 from features.utils.datautils import *
 from features.utils.exportutils import *
 from features.utils.gdfutils import *
+from learnkit.train.Predictor import *
 
 
 @given("a dataset of georeferenced {parcel} geometries within the {city}")
-def step_impl(state, parcel, city):
-	state.city = city
-	state.data = parcel
-	state.parcel_samples = f"data/{city}/processed/samples/{parcel}.feather"
-	state.predictors = f'data/{state.city}/processed/predictors'
-	state.dependencies = f'data/{state.city}/processed/dependencies'
-	state.importance = f'data/{state.city}/processed/importance'
-	state.maps = f'data/{state.city}/processed/maps'
-	state.test = f'data/{state.city}/processed/test'
-	assert (os.path.exists(state.parcel_samples))
+def step_impl(paths, parcel, city):
+	paths.city = city
+	paths.data = parcel
+	paths.parcel_file = f"data/{city}/processed/samples/{parcel}.feather"
+	paths.waters_file = f"{city}/open_street_map/water_bodies"
+	paths.predictors = f'data/{paths.city}/processed/predictors'
+	paths.dependencies = f'data/{paths.city}/processed/dependencies'
+	paths.importance = f'data/{paths.city}/processed/importance'
+	paths.maps = f'data/{paths.city}/processed/maps'
+	paths.test = f'data/{paths.city}/processed/test'
+	assert (os.path.exists(paths.parcel_file))
 	pass
 
 
 @when("the dataset includes valid quantitative and georeferenced data")
 def step_impl(state, ):
-	gdf = read_gdf(state.parcel_samples)
+	gdf = read_gdf(state.parcel_file)
 	assert (gdf.crs is not None)
 	assert ('geometry' in gdf.columns)
 
@@ -35,7 +36,7 @@ def step_impl(state, ):
 def step_impl(state, train_size, dependent):
 	train_share = int(train_size)/100
 	test_share = round(1 - train_share, 2)
-	gdf = gpd.read_feather(state.parcel_samples)
+	gdf = gpd.read_feather(state.parcel_file)
 	save_path = state.predictors
 
 	assert (dependent in list(gdf.columns)), f"Could not find {dependent} within {list(gdf.columns)}."
@@ -94,18 +95,29 @@ def step_impl(state):
 	assert (len(os.listdir(directory)) > 0)
 
 
-@step("plot charts and maps of {count} most important variables")
+@step("plot maps of {count} most important variables")
 def step_impl(state, count):
-	gdf = read_samples(state.parcel_samples)
+	gdf = read_samples(state.parcel_file)
+	gdf2 = read_feather(state.waters_file).to_crs(26910)
 	features = read_important_features(state.importance, count)
 	predictors = read_predictors(state.predictors)
 	assert (len(features) == len(predictors))
 
 	for i, feature_set in enumerate(features):
 		predicted = [p.predicted for p in predictors]
-		[plot_choropleth_map(gdf, feature, state.maps) for feature in feature_set + predicted]
-		predictors[i].plot_partial_dependence(state.dependencies, feature_set)
+		[plot_choropleth_map(gdf, feature, state.maps, gdf2) for feature in feature_set + predicted]
+		gc.collect()
 	assert (len(os.listdir(state.maps)) > 0)
+
+
+@step("plot significance charts of {count} most important variables")
+def step_impl(state, count):
+	features = read_important_features(state.importance, count)
+	predictors = read_predictors(state.predictors)
+	assert (len(features) == len(predictors))
+
+	for i, feature_set in enumerate(features):
+		predictors[i].plot_partial_dependence(state.dependencies, feature_set)
 	assert (len(os.listdir(state.dependencies)) > 0)
 
 
