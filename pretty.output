@@ -1,6 +1,12 @@
-Feature: Data Gathering # features/data_gathering.feature:3
+Feature: Urban Space Dynamics Prediction # features/model_training.feature:3
+  As an urban researcher,
+  I want to use georeferenced data to train a predictive model,
+  So that I can accurately predict key indicators related to walkability and affordability in urban areas,
+  And identify spatial indicators that significantly influence these dynamics.
+  Background:   # features/model_training.feature:10
 
-  Scenario: Download GPS Traces                                # features/data_gathering.feature:9
-    Given a valid place name Metro Vancouver Regional District # features/steps/data_gathering.py:158
-    Then download and save GPS traces                          # features/steps/data_gathering.py:163
-
+  Scenario: Predicting dependent variables with a trained model                                     # features/model_training.feature:22
+    Given a dataset of georeferenced parcel geometries within the Metro Vancouver Regional District # features/steps/model_training_steps.py:13
+    Given a predictive model trained                                                                # features/steps/model_training_steps.py:65
+    Then assess predictive accuracy based on the test data                                          # features/steps/model_training_steps.py:77
+    And rank explanatory variables by permutation importance                                        # features/steps/model_training_steps.py:86
