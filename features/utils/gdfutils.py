@@ -13,7 +13,7 @@ def plot_choropleth_map(gdf, column, directory, gray_gdf=None):
         gray_gdf.plot(
             ax=ax, 
             color='lightgray', 
-            linewidth=0.2, 
+            linewidth=0.3, 
             zorder=0)
 
     plot_gdf = gdf[gdf[column] != 0]

@@ -2,7 +2,9 @@ Feature: Urban Space Dynamics Prediction # features/model_training.feature:3
 
   Background:   # features/model_training.feature:10
 
-  Scenario: Exporting significance to external path                                                 # features/model_training.feature:37
+  Scenario: Exporting maps to external path                                                         # features/model_training.feature:27
     Given a dataset of georeferenced parcel geometries within the Metro Vancouver Regional District # features/steps/model_training_steps.py:15
     Given a predictive model trained                                                                # features/steps/model_training_steps.py:68
-    Then plot significance charts of 6 most important variables                                     # features/steps/model_training_steps.py:119
+    Then plot maps of 6 most important variables                                                    # features/steps/model_training_steps.py:101
+    And copy outputs to manuscript path                                                             # features/steps/model_training_steps.py:157
+
