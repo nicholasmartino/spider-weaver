@@ -12,12 +12,13 @@ The main functionality of this repository includes:
 
 ## Repository Structure
 
-- **`data/`**: Directory for input spatial datasets, including raw data from open sources and processed data files.
-- **`models/`**: Stores the trained model objects and any related configuration files.
-- **`scripts/`**: Contains Python scripts for data aggregation, metric computation, and model training and evaluation.
-- **`tests/`**: Holds BDD-style tests that validate data processing and prediction outputs.
-- **`requirements.txt`**: Lists required dependencies to run the code in this repository.
-- **`README.md`**: This document, providing an overview and instructions for setup and usage.
+- **`citymodel/`**: Core object model for representing and simulating urban environments.
+- **`data/`**: Folder was excluded from GitHub repo due to the large file sizes. Contains spatial datasets:
+  - **Raw data**: Original data from open sources.
+  - **Processed data**: Refined datasets ready for analysis and model input.
+- **`features/`**: Behavior-driven development (BDD) tests for validating data processing workflows and prediction outcomes.
+- **`learnkit/`**: Machine learning module for network analysis, prediction models, and related scripts.
+- **`requirements.txt`**: Defines all necessary dependencies for seamless execution of the repository's code.
 
 ## Installation
 
