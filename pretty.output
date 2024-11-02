@@ -1,10 +1,5 @@
-Feature: Urban Space Dynamics Prediction # features/model_training.feature:3
+Feature: Data Gathering # features/data_gathering.feature:3
 
-  Background:   # features/model_training.feature:10
-
-  Scenario: Exporting maps to external path                                                         # features/model_training.feature:27
-    Given a dataset of georeferenced parcel geometries within the Metro Vancouver Regional District # features/steps/model_training_steps.py:15
-    Given a predictive model trained                                                                # features/steps/model_training_steps.py:68
-    Then plot maps of 6 most important variables                                                    # features/steps/model_training_steps.py:101
-    And copy outputs to manuscript path                                                             # features/steps/model_training_steps.py:157
-
+  Scenario: Download Water Bodies                              # features/data_gathering.feature:5
+    Given a valid place name Metro Vancouver Regional District # features/steps/data_gathering.py:157
+    Then download and save water bodies                        # features/steps/data_gathering.py:167
