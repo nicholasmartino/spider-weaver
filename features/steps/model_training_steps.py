@@ -3,11 +3,13 @@ import shutil
 
 from behave import *
 from pandas.api import types
+import matplotlib.pyplot as plt
 
 from features.utils.datautils import *
 from features.utils.exportutils import *
 from features.utils.gdfutils import *
 from learnkit.train.Predictor import *
+import seaborn as sns
 
 
 @given("a dataset of georeferenced {parcel} geometries within the {city}")
@@ -16,6 +18,7 @@ def step_impl(paths, parcel, city):
 	paths.data = parcel
 	paths.parcel_file = f"data/{city}/processed/samples/{parcel}.feather"
 	paths.waters_file = f"{city}/open_street_map/water_bodies"
+	paths.street_file = f"{city}/network/street_link"
 	paths.predictors = f'data/{paths.city}/processed/predictors'
 	paths.dependencies = f'data/{paths.city}/processed/dependencies'
 	paths.importance = f'data/{paths.city}/processed/importance'
@@ -98,7 +101,10 @@ def step_impl(state):
 @step("plot maps of {count} most important variables")
 def step_impl(state, count):
 	gdf = read_samples(state.parcel_file)
-	gdf2 = read_feather(state.waters_file).to_crs(26910)
+	gdf2 = pd.concat([
+		read_feather(state.street_file), 
+		read_feather(state.waters_file).to_crs(26910)
+	])
 	features = read_important_features(state.importance, count)
 	predictors = read_predictors(state.predictors)
 	assert (len(features) == len(predictors))
@@ -119,6 +125,33 @@ def step_impl(state, count):
 	for i, feature_set in enumerate(features):
 		predictors[i].plot_partial_dependence(state.dependencies, feature_set)
 	assert (len(os.listdir(state.dependencies)) > 0)
+
+
+@step("plot a correlation matrix of {count} most important features")
+def step_impl(state, count):
+	directory = state.dependencies
+	gdf = gpd.read_feather(state.parcel_file)
+
+	predictors = read_predictors(state.predictors)
+	predicted = [p.predicted for p in predictors]
+
+	features = read_important_features(state.importance, count)
+	feature_set = list(set([feature for features in features for feature in features] + predicted))
+	assert (len(feature_set) > 0)
+	for feature in feature_set:
+		assert (feature in gdf.columns)
+
+	corr = gdf.loc[:, feature_set].corr()
+	file_path = f"{directory}/correlation_matrix.png"
+
+	plt.figure(figsize=(12, 10))
+	sns.heatmap(corr, annot=True, fmt=".2f", cmap="RdBu", cbar=True, square=True)
+	plt.xticks(rotation=90, ha='right')
+	plt.yticks(rotation=0)
+	plt.tight_layout()
+	plt.savefig(file_path, dpi=150, transparent=True)
+	plt.close()
+	assert (os.path.exists(file_path))
 
 
 @step("copy outputs to manuscript path")

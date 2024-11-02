@@ -2,9 +2,7 @@ import datetime
 import math
 import os.path
 from itertools import product
-
 import matplotlib.pyplot as plt
-
 import geopandas as gpd
 import requests
 from behave import *
@@ -135,7 +133,8 @@ def download_and_save_gps_traces(place_name):
 
 
 def download_and_save_water_bodies(place_name):
-    gdf = get_water_bodies_gdf(place_name)
+    gdf = get_water_bodies_gdf(place_name).to_crs(26910)
+    gdf = gdf.where(gdf.geometry.length > 100).to_crs(4326)
     _, ax = plt.subplots()
     gdf.plot(ax=ax)
     plt.savefig(f"data/{place_name}/open_street_map/water_bodies.png")

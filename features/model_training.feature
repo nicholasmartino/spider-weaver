@@ -2,10 +2,10 @@
 
 Feature: Urban Space Dynamics Prediction
 
-  As an urban researcher,
-  I want to use georeferenced data to train a predictive model,
-  So that I can accurately predict key indicators related to walkability and affordability in urban areas,
-  And identify spatial indicators that significantly influence these dynamics.
+  # As an urban researcher,
+  # I want to use georeferenced data to train a predictive model,
+  # So that I can accurately predict key indicators related to walkability and affordability in urban areas,
+  # And identify spatial indicators that significantly influence these dynamics
 
   Background:
     Given a dataset of georeferenced parcel geometries within the Metro Vancouver Regional District
@@ -28,6 +28,11 @@ Feature: Urban Space Dynamics Prediction
     Given a predictive model trained
     Then plot maps of 6 most important variables
     And copy outputs to manuscript path
+
+  Scenario: Plot correlation matrix
+    Given a predictive model trained
+    Then plot a correlation matrix of 6 most important features
+    And copy outputs to manuscript path  
 
   Scenario: Exporting significance to external path
     Given a predictive model trained

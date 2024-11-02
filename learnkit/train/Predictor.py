@@ -94,12 +94,12 @@ class Predictor:
         x_train, x_test, y_train, y_test = self.split()
 
         # Plot dependencies
-        fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(10, 6))
-        dependence_display = PartialDependenceDisplay.from_estimator(self.regressor, x_train, features, ax=axes.ravel())
+        _, axes = plt.subplots(nrows=2, ncols=3, figsize=(10, 6))
+        dependence_display = PartialDependenceDisplay.from_estimator(self.regressor, x_train, features, ax=axes.ravel(), kind='average')
         plt.tight_layout()
 
         plot_path = f'{plot_dir}/partial_dependencies_{self.predicted}.png'
-        dependence_display.figure_.savefig(plot_path, dpi=300, transparent=True)
+        dependence_display.figure_.savefig(plot_path, dpi=150, transparent=True)
         return set(features)
 
 

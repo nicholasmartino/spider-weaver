@@ -48,7 +48,7 @@ def get_city_boundary_gdf(city):
 
 def get_water_bodies_gdf(city):
     natural_tags = ["water", "bay", "strait", "coastline"]
-    waterway_tags = [] # ["river", "riverbank", "canal", "stream"]
+    waterway_tags = ["river", "riverbank", "canal", "stream"]
     elements = []
     [
         elements.extend(query_elements_from_city_name(city, "natural", tag))
@@ -140,6 +140,6 @@ def query_elements_from_city_name(city, key, value):
     data = response.json()
 
     if not data["elements"]:
-        print(Warning(f"No elements found for {key}={value} in {city}"))
+        print(f"No elements found for {key}={value} in {city}")
 
     return data["elements"]

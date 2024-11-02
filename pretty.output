@@ -1,12 +1,8 @@
 Feature: Urban Space Dynamics Prediction # features/model_training.feature:3
-  As an urban researcher,
-  I want to use georeferenced data to train a predictive model,
-  So that I can accurately predict key indicators related to walkability and affordability in urban areas,
-  And identify spatial indicators that significantly influence these dynamics.
+
   Background:   # features/model_training.feature:10
 
-  Scenario: Predicting dependent variables with a trained model                                     # features/model_training.feature:22
-    Given a dataset of georeferenced parcel geometries within the Metro Vancouver Regional District # features/steps/model_training_steps.py:13
-    Given a predictive model trained                                                                # features/steps/model_training_steps.py:65
-    Then assess predictive accuracy based on the test data                                          # features/steps/model_training_steps.py:77
-    And rank explanatory variables by permutation importance                                        # features/steps/model_training_steps.py:86
+  Scenario: Exporting significance to external path                                                 # features/model_training.feature:37
+    Given a dataset of georeferenced parcel geometries within the Metro Vancouver Regional District # features/steps/model_training_steps.py:15
+    Given a predictive model trained                                                                # features/steps/model_training_steps.py:68
+    Then plot significance charts of 6 most important variables                                     # features/steps/model_training_steps.py:119
