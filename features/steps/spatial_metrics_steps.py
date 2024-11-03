@@ -1,6 +1,6 @@
 from behave import *
 
-from citymodel.base.Network import Network
+from city.Network import Network
 from features.utils.datautils import *
 from learnkit.train.NetworkAnalysis import *
 

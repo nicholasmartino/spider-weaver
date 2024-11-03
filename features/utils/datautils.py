@@ -1,7 +1,7 @@
 import json
 import os.path
 
-from shapeutils.GeoDataFrameUtils import *
+from city.shapeutils.GeoDataFrameUtils import *
 
 
 def save_feather(path, gdf):

@@ -3,7 +3,7 @@ import pickle
 from shapely.ops import nearest_points
 from tqdm import tqdm
 import pandas as pd
-from shapeutils.ShapeTools import SpatialAnalyst
+from city.shapeutils.ShapeTools import SpatialAnalyst
 from shapely.geometry import LineString, Point
 
 
