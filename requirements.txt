@@ -44,4 +44,4 @@ threadpoolctl==3.5.0
 tqdm==4.66.4
 tzdata==2024.1
 urllib3==2.2.2
-city @ git+https://github.com/nicholasmartino/city.git@master#egg=city
+city @ git+https://github.com/nicholasmartino/city.git
