@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt
 import geopandas as gpd
 import requests
 from behave import *
+from shapely.geometry import Point
 from geopy.distance import geodesic
 from lxml import etree
-from shapely.geometry import Point
 
 from citymodel.scrape.OpenStreetMap import get_city_boundary_gdf, get_water_bodies_gdf
 

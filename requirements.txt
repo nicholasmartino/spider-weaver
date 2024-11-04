@@ -1,20 +1,27 @@
 behave==1.2.6
+black==24.10.0
 blosc2==2.3.0
 certifi==2024.6.2
 charset-normalizer==3.3.2
+city @ git+https://github.com/nicholasmartino/city.git@0d9cf0b672c2038838fe5110a16bdb1d388832b6
+click==8.1.7
 contourpy==1.2.1
 cycler==0.12.1
 fonttools==4.53.0
 geographiclib==2.0
 geopandas==1.0.0
 geopy==2.4.1
+greenlet==3.1.1
 idna==3.7
+Jinja2==3.1.4
 joblib==1.4.2
 kiwisolver==1.4.5
 lxml==5.2.0
 mapclassify==2.6.1
+MarkupSafe==3.0.2
 matplotlib==3.9.0
 msgpack==1.0.8
+mypy-extensions==1.0.0
 ndindex==1.8
 networkx==3.3
 numexpr==2.10.1
@@ -24,9 +31,12 @@ pandana==0.7
 pandas==2.2.2
 parse==1.20.2
 parse-type==0.6.2
+pathspec==0.12.1
 pillow==10.3.0
+platformdirs==4.3.6
 py-cpuinfo==9.0.0
 pyarrow==16.1.0
+pydeck==0.9.1
 pyogrio==0.9.0
 pyparsing==3.1.2
 pyproj==3.6.1
@@ -39,9 +49,10 @@ scipy==1.14.0
 seaborn==0.13.2
 shapely==2.0.4
 six==1.16.0
+SQLAlchemy==2.0.36
 tables==3.9.2
 threadpoolctl==3.5.0
 tqdm==4.66.4
+typing_extensions==4.12.2
 tzdata==2024.1
 urllib3==2.2.2
-city @ git+https://github.com/nicholasmartino/city.git
