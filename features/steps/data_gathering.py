@@ -2,15 +2,14 @@ import datetime
 import math
 import os.path
 from itertools import product
+from geopy.distance import geodesic
 import matplotlib.pyplot as plt
 import geopandas as gpd
 import requests
 from behave import *
 from shapely.geometry import Point
-from geopy.distance import geodesic
-from lxml import etree
-
 from citymodel.scrape.OpenStreetMap import get_city_boundary_gdf, get_water_bodies_gdf
+from lxml import etree
 
 
 def split_bbox(total_bounds, max_size=0.25):

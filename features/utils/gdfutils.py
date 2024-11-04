@@ -10,20 +10,17 @@ def plot_choropleth_map(gdf, column, directory, gray_gdf=None):
     _, ax = plt.subplots(1, 1, figsize=(10, 8))
 
     if gray_gdf is not None:
-        gray_gdf.plot(
-            ax=ax, 
-            color='lightgray', 
-            linewidth=0.3, 
-            zorder=0)
+        gray_gdf.plot(ax=ax, color="lightgray", linewidth=0.3, zorder=0)
 
     plot_gdf = gdf[gdf[column] != 0]
     plot_gdf.plot(
-        column=column, 
-        ax=ax, 
-        cmap='magma_r', 
-        legend=True, 
-        scheme="NaturalBreaks", 
-        zorder=1)
+        column=column,
+        ax=ax,
+        cmap="magma_r",
+        legend=True,
+        scheme="NaturalBreaks",
+        zorder=1,
+    )
 
     # Set the axis limits to the bounding box of gdf
     ax.set_xlim(gdf.total_bounds[0], gdf.total_bounds[2])
