@@ -1,6 +1,6 @@
 from behave import *
-
 from city.Network import Network
+
 from features.utils.datautils import *
 from learnkit.train.NetworkAnalysis import *
 
@@ -55,7 +55,7 @@ def step_impl(context, network):
 )
 def step_impl(context, operation, series, label, radii, data_frame):
     boundary_gdf = context.gdf_db[context.city]
-    parcel_gdf = gpd.overlay(get_sample_parcels(context.city), boundary_gdf)
+    sample_gdf = gpd.overlay(get_sample_parcels(context.city), boundary_gdf)
     nodes_gdf = read_feather(f"{context.city}/network/street_node")
     links_gdf = read_feather(f"{context.city}/network/street_link")
     save_feature_dict(label, series, f"data/{context.city}/processed/feature_dict.json")
@@ -64,10 +64,10 @@ def step_impl(context, operation, series, label, radii, data_frame):
     target_gdf[label] = target_gdf[series]
     target_gdf = target_gdf.loc[:, [label, "geometry"]].copy()
 
-    joined_gdf = parcel_gdf.copy()
+    joined_gdf = sample_gdf.copy()
     for radius in radii.split(", "):
         network = Network(nodes_gdf, links_gdf)
-        analyst = SpatialAnalyst(parcel_gdf, target_gdf)
+        analyst = SpatialAnalyst(sample_gdf, target_gdf)
         network_analyst = SpatialNetworkAnalyst(analyst, network)
         joined_gdf = pd.concat(
             [

@@ -1,0 +1,11 @@
+{
+    "typeCheckingMode": "strict",
+    "reportMissingImports": true,
+    "reportMissingTypeStubs": false,
+    "reportWildcardImportFromLibrary": "none",
+    "reportUntypedFunctionDecorator": "none",
+    "reportRedeclaration": "none",
+    "reportAttributeAccessIssue": "none",
+    "reportUnknownArgumentType": "none",
+    "reportUnknownMemberType": "none"
+  }

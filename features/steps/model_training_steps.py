@@ -1,38 +1,51 @@
 import os.path
 import shutil
+from typing import List, TypedDict
 
-from behave import *
-from pandas.api import types
+import geopandas as gpd
 import matplotlib.pyplot as plt
+import seaborn as sns
+from behave import *
+from geopandas import GeoDataFrame
+from pandas.api import types
 
 from features.utils.datautils import *
 from features.utils.exportutils import *
 from features.utils.gdfutils import *
 from learnkit.train.Predictor import *
-import seaborn as sns
 
 
-@given("a dataset of georeferenced {parcel} geometries within the {city}")
-def step_impl(paths, parcel, city):
+class Paths(TypedDict):
+    city: str
+    housing_rent: str
+    waters_file: str
+    street_file: str
+    predictors: str
+    dependencies: str
+    importance: str
+    maps: str
+    test: str
+
+@given("a dataset of georeferenced geometries within {city}")
+def step_impl(paths: Paths, city: str):
+    BASE_PATH = "gs://"
+    city_id = city.lower().replace(" ", "-")
     paths.city = city
-    paths.data = parcel
-    paths.parcel_file = f"data/{city}/processed/samples/{parcel}.feather"
-    paths.waters_file = f"{city}/open_street_map/water_bodies"
-    paths.street_file = f"{city}/network/street_link"
-    paths.predictors = f"data/{paths.city}/processed/predictors"
-    paths.dependencies = f"data/{paths.city}/processed/dependencies"
-    paths.importance = f"data/{paths.city}/processed/importance"
-    paths.maps = f"data/{paths.city}/processed/maps"
-    paths.test = f"data/{paths.city}/processed/test"
-    assert os.path.exists(paths.parcel_file)
+    paths.housing_rent = f"{BASE_PATH}/{city_id}/craigslist/housing_rent.feather"
+    paths.waters_file = f"{BASE_PATH}/{city_id}/open_street_map/water_bodies"
+    paths.street_file = f"{BASE_PATH}/{city_id}/network/street_link"
+    paths.predictors = f"{BASE_PATH}/{city_id}/processed/predictors"
+    paths.dependencies = f"{BASE_PATH}/{city_id}/processed/dependencies"
+    paths.importance = f"{BASE_PATH}/{city_id}/processed/importance"
+    paths.maps = f"{BASE_PATH}/{city_id}/processed/maps"
+    paths.test = f"{BASE_PATH}/{city_id}/processed/test"
+    assert os.path.exists(paths.housing_rent)
     pass
 
 
 @when("the dataset includes valid quantitative and georeferenced data")
-def step_impl(
-    state,
-):
-    gdf = read_gdf(state.parcel_file)
+def step_impl(state: Paths) -> None:
+    gdf: GeoDataFrame = read_gdf(state.housing_rent)  # type: ignore
     assert gdf.crs is not None
     assert "geometry" in gdf.columns
 
@@ -40,11 +53,11 @@ def step_impl(
 @then(
     "use {train_size}% of the available data to train a random forest model to predict {dependent} variable"
 )
-def step_impl(state, train_size, dependent):
+def step_impl(state: Paths, train_size: str, dependent: str) -> None:
     train_share = int(train_size) / 100
     test_share = round(1 - train_share, 2)
-    gdf = gpd.read_feather(state.parcel_file)
-    save_path = state.predictors
+    gdf = gpd.read_feather(state.housing_rent)
+    save_path = str(state.predictors)
 
     assert dependent in list(
         gdf.columns
@@ -53,12 +66,12 @@ def step_impl(state, train_size, dependent):
 
     plot_choropleth_map(gdf, dependent, state.maps)
 
-    not_explanatory = ["walk_r", "price_r", "walkability_r", "rent_price_r"]
-    invalid_list = [
+    not_explanatory: List[str] = ["walk_r", "price_r", "walkability_r", "rent_price_r"]
+    invalid_list: List[str] = [
         col for col in gdf.columns for invalid in not_explanatory if invalid in col
     ]
-    invalid_set = ["geometry"] + list(set(invalid_list))
-    explanatory = list(set.difference(set(gdf.columns), invalid_set))
+    invalid_set: List[str] = ["geometry"] + list(set(invalid_list))
+    explanatory: List[str] = list(set.difference(set(gdf.columns), invalid_set))
 
     predictor = Predictor(
         data=gdf,
@@ -74,7 +87,7 @@ def step_impl(state, train_size, dependent):
 
 
 @step("a predictive model trained")
-def step_impl(state):
+def step_impl(state: Paths) -> None:
     assert len(os.listdir(state.predictors)) > 0
     if not hasattr(state, "trained"):
         state.trained = {}
@@ -107,8 +120,8 @@ def step_impl(state):
 
 
 @step("plot maps of {count} most important variables")
-def step_impl(state, count):
-    gdf = read_samples(state.parcel_file)
+def step_impl(state: Paths, count: int):
+    gdf = read_samples(state.housing_rent)
     gdf2 = pd.concat(
         [read_feather(state.street_file), read_feather(state.waters_file).to_crs(26910)]
     )
@@ -127,7 +140,7 @@ def step_impl(state, count):
 
 
 @step("plot significance charts of {count} most important variables")
-def step_impl(state, count):
+def step_impl(state: Paths, count: int) -> None:
     features = read_important_features(state.importance, count)
     predictors = read_predictors(state.predictors)
     assert len(features) == len(predictors)
@@ -138,9 +151,9 @@ def step_impl(state, count):
 
 
 @step("plot a correlation matrix of {count} most important features")
-def step_impl(state, count):
+def step_impl(state: Paths, count: str) -> None:
     directory = state.dependencies
-    gdf = gpd.read_feather(state.parcel_file)
+    gdf: GeoDataFrame = gpd.read_feather(state.housing_rent)
 
     predictors = read_predictors(state.predictors)
     predicted = [p.predicted for p in predictors]

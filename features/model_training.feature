@@ -8,7 +8,7 @@ Feature: Urban Space Dynamics Prediction
   # And identify spatial indicators that significantly influence these dynamics
 
   Background:
-    Given a dataset of georeferenced parcel geometries within the Metro Vancouver Regional District
+    Given a dataset of georeferenced geometries within Metro Vancouver Regional District
 
   Scenario Outline: Training a predictive model with spatial data
     When the dataset includes valid quantitative and georeferenced data
@@ -32,7 +32,7 @@ Feature: Urban Space Dynamics Prediction
   Scenario: Plot correlation matrix
     Given a predictive model trained
     Then plot a correlation matrix of 6 most important features
-    And copy outputs to manuscript path  
+    And copy outputs to manuscript path
 
   Scenario: Exporting significance to external path
     Given a predictive model trained
