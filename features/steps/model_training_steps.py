@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from behave import *
 from geopandas import GeoDataFrame
+from google.cloud import storage
+from google.cloud.storage import Blob
 from pandas.api import types
 
 from features.utils.datautils import *
@@ -26,9 +28,36 @@ class Paths(TypedDict):
     maps: str
     test: str
 
+
+def copy_gcs_path(bucket_name: str) -> bool:
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(f"gs://{bucket_name}")
+    
+    # Create a local directory with the bucket name
+    local_dir = f"data/{bucket_name}"
+    os.makedirs(local_dir, exist_ok=True)
+    
+    # Download all blobs (files) from the bucket
+    blobs: List[Blob] = list(bucket.list_blobs())
+    for blob in blobs:
+        if blob.name is None:
+            continue
+        
+        # Create the full local path
+        local_path: str = os.path.join(local_dir, blob.name)
+        
+        # Create directories if they don't exist
+        os.makedirs(os.path.dirname(local_path), exist_ok=True)
+        
+        # Download the file
+        blob.download_to_filename(local_path)
+    
+    return True
+
+
 @given("a dataset of georeferenced geometries within {city}")
 def step_impl(paths: Paths, city: str):
-    BASE_PATH = "gs://"
+    BASE_PATH = "data"
     city_id = city.lower().replace(" ", "-")
     paths.city = city
     paths.housing_rent = f"{BASE_PATH}/{city_id}/craigslist/housing_rent.feather"
@@ -39,6 +68,8 @@ def step_impl(paths: Paths, city: str):
     paths.importance = f"{BASE_PATH}/{city_id}/processed/importance"
     paths.maps = f"{BASE_PATH}/{city_id}/processed/maps"
     paths.test = f"{BASE_PATH}/{city_id}/processed/test"
+    copy_gcs_path(city_id)
+
     assert os.path.exists(paths.housing_rent)
     pass
 
@@ -99,7 +130,7 @@ def step_impl(state: Paths) -> None:
 
 
 @then("assess predictive accuracy based on the test data")
-def step_impl(state):
+def step_impl(state: Paths) -> None:
     directory = state.test
     check_and_clean_path(directory)
     for model in state.trained.keys():
@@ -108,7 +139,7 @@ def step_impl(state):
 
 
 @step("rank explanatory variables by permutation importance")
-def step_impl(state):
+def step_impl(state: Paths) -> None:
     directory = state.importance
     predictors = read_predictors(state.predictors)
     check_and_clean_path(directory)
@@ -180,7 +211,7 @@ def step_impl(state: Paths, count: str) -> None:
 
 
 @step("copy outputs to manuscript path")
-def step_impl(state):
+def step_impl(state: Paths) -> None:
     folder_name = "processed"
     processed_directory = f"data/{state.city}/{folder_name}"
     manuscript_directory = f"{get_assets_directory()}/images"
@@ -197,11 +228,11 @@ def step_impl(state):
     )
 
 
-def read_samples(samples_path):
+def read_samples(samples_path: str) -> GeoDataFrame:
     return gpd.read_feather(samples_path)
 
 
-def read_predictors(predictors_dir):
+def read_predictors(predictors_dir: str) -> List[Predictor]:
     return [
         load_pickle(f"{predictors_dir}/{model}")
         for model in os.listdir(predictors_dir)
@@ -209,7 +240,7 @@ def read_predictors(predictors_dir):
     ]
 
 
-def read_important_features(importance_dir, feature_count):
+def read_important_features(importance_dir: str, feature_count: int) -> List[List[str]]:
     features_nested_list = []
     for file in os.listdir(importance_dir):
         if ".csv" not in file:
