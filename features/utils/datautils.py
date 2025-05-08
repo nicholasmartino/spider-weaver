@@ -22,14 +22,14 @@ def read_feather(path: str) -> GeoDataFrame:
 
 
 def get_sample_parcels(path: str) -> GeoDataFrame:
-    processed_parcels_gdf_path = f"data/{path}/processed/samples/parcel.feather"
+    processed_parcels_gdf_path = f"data/{path}/spider_weaver/samples/parcel.feather"
     if os.path.exists(processed_parcels_gdf_path):
         return read_gdf(processed_parcels_gdf_path)
     return read_gdf(f"data/{path}/parcel.feather")
 
 
 def get_sample_rent_prices(path: str) -> GeoDataFrame:
-    processed_rent_prices_gdf_path: str = f"data/{path}/processed/samples/rent_price.feather"
+    processed_rent_prices_gdf_path: str = f"data/{path}/spider_weaver/samples/rent_price.feather"
     if os.path.exists(processed_rent_prices_gdf_path):
         return read_gdf(processed_rent_prices_gdf_path)
     return read_gdf(f"data/{path}/rent_price.feather")

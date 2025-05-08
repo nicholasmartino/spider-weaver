@@ -31,7 +31,7 @@ class Paths(TypedDict):
 
 def copy_gcs_path(bucket_name: str) -> bool:
     storage_client = storage.Client()
-    bucket = storage_client.bucket(f"gs://{bucket_name}")
+    bucket = storage_client.bucket(bucket_name)
     
     # Create a local directory with the bucket name
     local_dir = f"data/{bucket_name}"
@@ -63,11 +63,11 @@ def step_impl(paths: Paths, city: str):
     paths.housing_rent = f"{BASE_PATH}/{city_id}/craigslist/housing_rent.feather"
     paths.waters_file = f"{BASE_PATH}/{city_id}/open_street_map/water_bodies"
     paths.street_file = f"{BASE_PATH}/{city_id}/network/street_link"
-    paths.predictors = f"{BASE_PATH}/{city_id}/processed/predictors"
-    paths.dependencies = f"{BASE_PATH}/{city_id}/processed/dependencies"
-    paths.importance = f"{BASE_PATH}/{city_id}/processed/importance"
-    paths.maps = f"{BASE_PATH}/{city_id}/processed/maps"
-    paths.test = f"{BASE_PATH}/{city_id}/processed/test"
+    paths.predictors = f"{BASE_PATH}/{city_id}/spider_weaver/predictors"
+    paths.dependencies = f"{BASE_PATH}/{city_id}/spider_weaver/dependencies"
+    paths.importance = f"{BASE_PATH}/{city_id}/spider_weaver/importance"
+    paths.maps = f"{BASE_PATH}/{city_id}/spider_weaver/maps"
+    paths.test = f"{BASE_PATH}/{city_id}/spider_weaver/test"
     copy_gcs_path(city_id)
 
     assert os.path.exists(paths.housing_rent)
@@ -122,25 +122,27 @@ def step_impl(state: Paths) -> None:
     assert len(os.listdir(state.predictors)) > 0
     if not hasattr(state, "trained"):
         state.trained = {}
-    for model in os.listdir(state.predictors):
+    
+    models: List[str] = list(os.listdir(state.predictors))
+    for model in models:
         if ".pkl" not in model:
             continue
         state.trained[model] = load_pickle(f"{state.predictors}/{model}")
         pass
 
-
 @then("assess predictive accuracy based on the test data")
 def step_impl(state: Paths) -> None:
-    directory = state.test
+    directory = str(state.test)
     check_and_clean_path(directory)
-    for model in state.trained.keys():
+    models: List[str] = list(state.trained.keys())
+    for model in models:
         state.trained[model].test(plot_dir=directory)
     assert len(os.listdir(directory)) > 0
 
 
 @step("rank explanatory variables by permutation importance")
 def step_impl(state: Paths) -> None:
-    directory = state.importance
+    directory = str(state.importance)
     predictors = read_predictors(state.predictors)
     check_and_clean_path(directory)
 
@@ -156,12 +158,12 @@ def step_impl(state: Paths, count: int):
     gdf2 = pd.concat(
         [read_feather(state.street_file), read_feather(state.waters_file).to_crs(26910)]
     )
-    features = read_important_features(state.importance, count)
-    predictors = read_predictors(state.predictors)
+    features: List[List[str]] = read_important_features(state.importance, count)
+    predictors: List[Predictor] = read_predictors(state.predictors)
     assert len(features) == len(predictors)
 
-    for i, feature_set in enumerate(features):
-        predicted = [p.predicted for p in predictors]
+    for feature_set in features:
+        predicted: List[str] = [str(p.predicted) for p in predictors]
         [
             plot_choropleth_map(gdf, feature, state.maps, gdf2)
             for feature in feature_set + predicted
@@ -182,12 +184,12 @@ def step_impl(state: Paths, count: int) -> None:
 
 
 @step("plot a correlation matrix of {count} most important features")
-def step_impl(state: Paths, count: str) -> None:
-    directory = state.dependencies
+def step_impl(state: Paths, count: int) -> None:
+    directory = str(state.dependencies)
     gdf: GeoDataFrame = gpd.read_feather(state.housing_rent)
 
-    predictors = read_predictors(state.predictors)
-    predicted = [p.predicted for p in predictors]
+    predictors: List[Predictor] = read_predictors(state.predictors)
+    predicted: List[str] = [str(p.predicted) for p in predictors]
 
     features = read_important_features(state.importance, count)
     feature_set = list(
@@ -212,7 +214,7 @@ def step_impl(state: Paths, count: str) -> None:
 
 @step("copy outputs to manuscript path")
 def step_impl(state: Paths) -> None:
-    folder_name = "processed"
+    folder_name = "spider_weaver"
     processed_directory = f"data/{state.city}/{folder_name}"
     manuscript_directory = f"{get_assets_directory()}/images"
     training_directory = f"{manuscript_directory}/training"
@@ -241,7 +243,7 @@ def read_predictors(predictors_dir: str) -> List[Predictor]:
 
 
 def read_important_features(importance_dir: str, feature_count: int) -> List[List[str]]:
-    features_nested_list = []
+    features_nested_list: List[List[str]] = []
     for file in os.listdir(importance_dir):
         if ".csv" not in file:
             continue

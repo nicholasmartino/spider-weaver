@@ -9,14 +9,14 @@ pd.set_option("display.width", 1000)
 
 
 @given("{data_frame} data samples located within {city}")
-def step_impl(context, data_frame, city):
+def step_impl(context, data_frame: str, city: str):
     context.city = city
-    data_gdf = read_feather(f"{context.city}/{data_frame}").to_crs(26910)
-    boundary_gdf = read_feather(f"{context.city}/boundary").to_crs(26910)
+    data_gdf: GeoDataFrame = read_feather(f"{context.city}/{data_frame}").to_crs(26910)
+    boundary_gdf: GeoDataFrame = read_feather(f"{context.city}/boundary").to_crs(26910)
 
     assert boundary_gdf is not None
     assert gdf_box_overlaps(boundary_gdf, data_gdf)
-    overlay = gpd.overlay(data_gdf, boundary_gdf)
+    overlay: GeoDataFrame = gpd.overlay(data_gdf, boundary_gdf)
 
     if not hasattr(context, "data"):
         context.gdf_db = {}
@@ -46,30 +46,30 @@ def step_impl(context, series, data_frame):
 def step_impl(context, network):
     assert context.gdf_db is not None
     calculator = NetworkMetricsCalculator(context.gdf_db[network]).calculate_metrics()
-    save_feather(f"{context.city}/processed/{network}", calculator.gdf)
+    save_feather(f"{context.city}/spider_weaver/{network}", calculator.gdf)
     pass
 
 
 @then(
     "{operation} the {series} ({label}) within {radii} meters from {data_frame} to parcels via street network"
 )
-def step_impl(context, operation, series, label, radii, data_frame):
-    boundary_gdf = context.gdf_db[context.city]
-    sample_gdf = gpd.overlay(get_sample_parcels(context.city), boundary_gdf)
-    nodes_gdf = read_feather(f"{context.city}/network/street_node")
-    links_gdf = read_feather(f"{context.city}/network/street_link")
-    save_feature_dict(label, series, f"data/{context.city}/processed/feature_dict.json")
+def step_impl(context, operation: str, series: str, label: str, radii: str, data_frame: str):
+    boundary_gdf: GeoDataFrame = context.gdf_db[context.city]
+    sample_gdf: GeoDataFrame = gpd.overlay(get_sample_parcels(context.city), boundary_gdf)
+    nodes_gdf: GeoDataFrame = read_feather(f"{context.city}/network/street_node")
+    links_gdf: GeoDataFrame = read_feather(f"{context.city}/network/street_link")
+    save_feature_dict(label, series, f"data/{context.city}/spider_weaver/feature_dict.json")
 
-    target_gdf = context.gdf_db[data_frame].copy()
+    target_gdf: GeoDataFrame = context.gdf_db[data_frame].copy()
     target_gdf[label] = target_gdf[series]
     target_gdf = target_gdf.loc[:, [label, "geometry"]].copy()
 
-    joined_gdf = sample_gdf.copy()
+    joined_gdf: GeoDataFrame = sample_gdf.copy()
     for radius in radii.split(", "):
-        network = Network(nodes_gdf, links_gdf)
-        analyst = SpatialAnalyst(sample_gdf, target_gdf)
-        network_analyst = SpatialNetworkAnalyst(analyst, network)
-        joined_gdf = pd.concat(
+        network: Network = Network(nodes_gdf, links_gdf)
+        analyst: SpatialAnalyst = SpatialAnalyst(sample_gdf, target_gdf)
+        network_analyst: SpatialNetworkAnalyst = SpatialNetworkAnalyst(analyst, network)
+        joined_gdf: GeoDataFrame = pd.concat(
             [
                 joined_gdf,
                 network_analyst.buffer_join_network(
@@ -79,6 +79,6 @@ def step_impl(context, operation, series, label, radii, data_frame):
             axis=1,
         ).drop_duplicates()
         joined_gdf = joined_gdf.loc[:, ~joined_gdf.columns.duplicated()].copy()
-        save_feather(f"{context.city}/processed/samples/parcel", joined_gdf)
+        save_feather(f"{context.city}/spider_weaver/samples/parcel", joined_gdf)
         gc.collect()
     pass
