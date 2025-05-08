@@ -7,7 +7,7 @@ Feature: Spatial Metrics for City of Vancouver
   So that I can train a predictive model.
 
   Background:
-    Given parcel data samples located within Metro Vancouver Regional District
+    Given data samples located within Metro Vancouver Regional District
 
   Scenario Outline: Aggregate from Data Source to Parcel Along Street Network
     Given <data_source> data samples located within Metro Vancouver Regional District

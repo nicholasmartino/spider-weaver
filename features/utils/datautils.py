@@ -1,9 +1,14 @@
 import json
 import os.path
+from typing import Dict, TypedDict
 
 from city.shapeutils.GeoDataFrameUtils import *
 from geopandas import GeoDataFrame
 
+
+class Context(TypedDict):
+    city: str
+    gdf_db: Dict[str, GeoDataFrame]
 
 def save_feather(path: str, gdf: GeoDataFrame) -> None:
     full_path = f"data/{path}.feather"
@@ -39,7 +44,7 @@ def get_assets_directory():
     return f"{os.path.expanduser('~')}/GitHub/phd-generative-city/assets"
 
 
-def validate_geo_dataframe(context, data_frame: GeoDataFrame):
+def validate_geo_dataframe(context: Context, data_frame: str):
     assert context.gdf_db is not None
     assert context.gdf_db[data_frame] is not None
     assert context.gdf_db[data_frame].crs is not None

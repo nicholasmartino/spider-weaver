@@ -68,7 +68,6 @@ def step_impl(paths: Paths, city: str):
     paths.importance = f"{BASE_PATH}/{city_id}/spider_weaver/importance"
     paths.maps = f"{BASE_PATH}/{city_id}/spider_weaver/maps"
     paths.test = f"{BASE_PATH}/{city_id}/spider_weaver/test"
-    copy_gcs_path(city_id)
 
     assert os.path.exists(paths.housing_rent)
     pass
