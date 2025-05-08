@@ -7,13 +7,13 @@ Feature: Spatial Metrics for City of Vancouver
   So that I can train a predictive model.
 
   Background:
-    Given data samples located within Metro Vancouver Regional District
+    Given craigslist data located within Metro Vancouver Regional District
 
-  Scenario Outline: Aggregate from Data Source to Parcel Along Street Network
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network
     Given <data_source> data samples located within Metro Vancouver Regional District
     When the geometry data of <data_source> is valid
     And <series> is available in the <data_source> data
-    Then <operation> the <series> (<label>) within 1600 meters from <data_source> to parcels via street network
+    Then <operation> the <series> (<label>) within 1600 meters from <data_source> to samples via street network
 
     Examples:
       | data_source               | series                                        | label               | operation |

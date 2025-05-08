@@ -20,7 +20,7 @@ def save_feather(path: str, gdf: GeoDataFrame) -> None:
 
 
 def read_feather(path: str) -> GeoDataFrame:
-    full_path: str = f"data/{path}.feather"
+    full_path: str =  f"data/{path}" if ".feather" in path else f"data/{path}.feather"
     if not os.path.exists(full_path):
         raise FileNotFoundError(full_path)
     return read_gdf(full_path)
