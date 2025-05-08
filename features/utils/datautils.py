@@ -61,16 +61,6 @@ def check_and_clean_path(path: str) -> None:
             os.remove(f"{path}/{file}")
 
 
-def read_feature_dict(path: str) -> dict:
-    if not os.path.exists(path):
-        return {}
-
-    with open(path, "r") as file:
-        data = json.load(file)
-
-    return data
-
-
 def save_feature_dict(key: str, value: str, path: str) -> bool:
     directory: str = os.path.dirname(path)
     if not os.path.exists(directory):
