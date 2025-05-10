@@ -1,7 +1,12 @@
+import os
+
+import geopandas as gpd
+import pandas as pd
 from behave import *
 from city.Network import Network
 
 from features.utils.datautils import *
+from features.utils.gcloudutils import *
 from learnkit.train.NetworkAnalysis import *
 
 pd.set_option("display.max_columns", 10)
@@ -10,11 +15,14 @@ pd.set_option("display.width", 1000)
 
 @given("{data_frame} data located within {city}")
 def step_impl(context: Context, data_frame: str, city: str):
-    context.city = f"data/{city.lower().replace(' ', '-')}"
+    if not os.path.exists("data"):
+        copy_gcs_path(city)
+        
+    context.city = f"{city.lower().replace(' ', '-')}"
     base_path = f"{context.city}/{data_frame}"
-    feather_path = os.path.join(base_path, os.listdir(base_path)[0])
+    feather_path = os.path.join(base_path, os.listdir(f"data/{base_path}")[0])
     data_gdf = GeoDataFrame(read_feather(feather_path).to_crs(26910))
-    boundary_gdf = GeoDataFrame(read_feather(f"{context.city}/boundary").to_crs(26910))
+    boundary_gdf = GeoDataFrame(read_feather(f"{context.city}/open_street_map/boundary").to_crs(26910))
 
     assert boundary_gdf is not None
     assert gdf_box_overlaps(boundary_gdf, data_gdf)
