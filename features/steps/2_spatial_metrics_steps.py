@@ -1,4 +1,3 @@
-import os
 
 import geopandas as gpd
 import pandas as pd
@@ -15,12 +14,12 @@ pd.set_option("display.width", 1000)
 
 @given("{data_frame} data located within {city}")
 def step_impl(context: Context, data_frame: str, city: str):
+    bucket_id = f"{city.lower().replace(' ', '-')}"
     if not os.path.exists("data"):
-        copy_gcs_path(city)
+        copy_gcs_path(bucket_id)
         
-    context.city = f"{city.lower().replace(' ', '-')}"
-    base_path = f"{context.city}/{data_frame}"
-    feather_path = os.path.join(base_path, os.listdir(f"data/{base_path}")[0])
+    context.city = bucket_id
+    feather_path = f"{context.city}/{data_frame}"
     data_gdf = GeoDataFrame(read_feather(feather_path).to_crs(26910))
     boundary_gdf = GeoDataFrame(read_feather(f"{context.city}/open_street_map/boundary").to_crs(26910))
 
