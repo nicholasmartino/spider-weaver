@@ -1,8 +1,8 @@
-
 import geopandas as gpd
 import pandas as pd
 from behave import *
 from city.Network import Network
+from geopandas import GeoDataFrame
 
 from features.utils.datautils import *
 from features.utils.gcloudutils import *
@@ -16,11 +16,12 @@ pd.set_option("display.width", 1000)
 def step_impl(context: Context, data_frame: str, city: str):
     context.city = city
     bucket_id = get_bucket_id(city)
+    context.bucket_id = bucket_id
     if not os.path.exists("data"):
         copy_gcs_path(bucket_id)
         
     feather_path = f"{bucket_id}/{data_frame}"
-    data_gdf = GeoDataFrame(read_feather(feather_path).to_crs(26910))
+    data_gdf: GeoDataFrame = GeoDataFrame(read_feather(feather_path).to_crs(epsg=26910))
     boundary_gdf = GeoDataFrame(read_feather(f"{bucket_id}/open_street_map/boundary").to_crs(26910))
 
     assert boundary_gdf is not None
@@ -64,10 +65,10 @@ def step_impl(context: Context, network: str):
 )
 def step_impl(context: Context, operation: str, series: str, label: str, radii: str, data_frame: str):
     boundary_gdf = GeoDataFrame(context.gdf_db[context.city])
-    sample_gdf = GeoDataFrame(gpd.overlay(get_sample_rent_prices(get_bucket_id(context.city)), boundary_gdf))
-    nodes_gdf = GeoDataFrame(read_feather(f"{get_bucket_id(context.city)}/network/street_node"))
-    links_gdf = GeoDataFrame(read_feather(f"{get_bucket_id(context.city)}/network/street_link"))
-    save_feature_dict(label, series, f"output/{get_bucket_id(context.city)}/spider_weaver/feature_dict.json")
+    sample_gdf = GeoDataFrame(gpd.overlay(get_sample_rent_prices(context.bucket_id), boundary_gdf))
+    nodes_gdf = GeoDataFrame(read_feather(f"{context.bucket_id}/network/street_node"))
+    links_gdf = GeoDataFrame(read_feather(f"{context.bucket_id}/network/street_link"))
+    save_feature_dict(label, series, f"output/{context.bucket_id}/spider_weaver/feature_dict.json")
 
     target_gdf = GeoDataFrame(context.gdf_db[data_frame].copy())
     target_gdf[label] = target_gdf[series]
@@ -88,6 +89,7 @@ def step_impl(context: Context, operation: str, series: str, label: str, radii: 
             axis=1,
         ).drop_duplicates())
         joined_gdf = joined_gdf.loc[:, ~joined_gdf.columns.duplicated()].copy()
-        save_feather(f"{context.city}/spider_weaver/{get_sample_rent_prices(get_bucket_id(context.city))}", GeoDataFrame(joined_gdf))
+        sample_path = get_sample_rent_prices_path(context.bucket_id)
+        save_feather(f"{context.bucket_id}/spider_weaver/{sample_path.split(context.bucket_id)[1]}", GeoDataFrame(joined_gdf))
         gc.collect()
     pass

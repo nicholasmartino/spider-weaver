@@ -1,19 +1,28 @@
 import os
 import pickle
+from dataclasses import dataclass
 from math import sqrt
-import matplotlib.pyplot as plt
+from typing import List
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.inspection import PartialDependenceDisplay
-from sklearn.inspection import permutation_importance
+from sklearn.inspection import PartialDependenceDisplay, permutation_importance
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 
 
+@dataclass
 class Predictor:
+    data: pd.DataFrame
+    predictors: List[str]
+    predicted: str
+    test_size: float
+    random_state: int
+    percentile: int
+    
     def __init__(self, data=None, predictors=None, predicted=None, test_size=0.2, random_state=1, percentile=99):
         assert predicted in data.columns, AssertionError(f"Column {predicted} not found in input data")
 

@@ -1,6 +1,6 @@
 import os.path
 import shutil
-from typing import List, TypedDict
+from typing import List
 
 import geopandas as gpd
 import matplotlib.pyplot as plt
@@ -15,7 +15,8 @@ from features.utils.gdfutils import *
 from learnkit.train.Predictor import *
 
 
-class Paths(TypedDict):
+@dataclass
+class Paths:
     city: str
     housing_rent: str
     waters_file: str
@@ -30,9 +31,10 @@ class Paths(TypedDict):
 @given("a dataset of georeferenced geometries within {city}")
 def step_impl(paths: Paths, city: str):
     BASE_PATH = "data"
+    PROCESSED_PATH = "spider_weaver"
     city_id = city.lower().replace(" ", "-")
     paths.city = city
-    paths.housing_rent = f"{BASE_PATH}/{city_id}/craigslist/housing_rent.feather"
+    paths.housing_rent = f"{BASE_PATH}/{city_id}/{PROCESSED_PATH}/craigslist/housing_rent.feather"
     paths.waters_file = f"{BASE_PATH}/{city_id}/open_street_map/water_bodies"
     paths.street_file = f"{BASE_PATH}/{city_id}/network/street_link"
     paths.predictors = f"{BASE_PATH}/{city_id}/spider_weaver/predictors"

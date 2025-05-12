@@ -5,7 +5,8 @@
     "reportWildcardImportFromLibrary": "none",
     "reportUntypedFunctionDecorator": "none",
     "reportRedeclaration": "none",
-    "reportAttributeAccessIssue": "none",
-    "reportUnknownArgumentType": "none",
-    "reportUnknownMemberType": "none"
+    "reportAttributeAccessIssue": "error",
+    "reportUnknownArgumentType": "error",
+    "reportUnknownMemberType": "warning",
+    "reportGeneralTypeIssues": "error"
   }
