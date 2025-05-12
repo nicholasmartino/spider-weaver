@@ -10,6 +10,9 @@ class Context(TypedDict):
     city: str
     gdf_db: Dict[str, GeoDataFrame]
 
+def get_bucket_id(city: str) -> str:
+    return city.lower().replace(' ', '-')
+
 def save_feather(path: str, gdf: GeoDataFrame) -> None:
     full_path = f"data/{path}.feather"
     if not os.path.exists(os.path.dirname(full_path)):
@@ -34,7 +37,7 @@ def get_sample_parcels(path: str) -> GeoDataFrame:
 
 
 def get_sample_rent_prices(path: str) -> GeoDataFrame:
-    processed_rent_prices_gdf_path: str = f"data/{path}/spider_weaver/samples/rent_price.feather"
+    processed_rent_prices_gdf_path: str = f"data/{path}/craigslist/housing_rent.feather"
     if os.path.exists(processed_rent_prices_gdf_path):
         return read_gdf(processed_rent_prices_gdf_path)
     return read_gdf(f"data/{path}/rent_price.feather")

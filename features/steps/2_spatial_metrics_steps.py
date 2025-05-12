@@ -14,14 +14,14 @@ pd.set_option("display.width", 1000)
 
 @given("{data_frame} data located within {city}")
 def step_impl(context: Context, data_frame: str, city: str):
-    bucket_id = f"{city.lower().replace(' ', '-')}"
+    context.city = city
+    bucket_id = get_bucket_id(city)
     if not os.path.exists("data"):
         copy_gcs_path(bucket_id)
         
-    context.city = bucket_id
-    feather_path = f"{context.city}/{data_frame}"
+    feather_path = f"{bucket_id}/{data_frame}"
     data_gdf = GeoDataFrame(read_feather(feather_path).to_crs(26910))
-    boundary_gdf = GeoDataFrame(read_feather(f"{context.city}/open_street_map/boundary").to_crs(26910))
+    boundary_gdf = GeoDataFrame(read_feather(f"{bucket_id}/open_street_map/boundary").to_crs(26910))
 
     assert boundary_gdf is not None
     assert gdf_box_overlaps(boundary_gdf, data_gdf)
@@ -64,10 +64,10 @@ def step_impl(context: Context, network: str):
 )
 def step_impl(context: Context, operation: str, series: str, label: str, radii: str, data_frame: str):
     boundary_gdf = GeoDataFrame(context.gdf_db[context.city])
-    sample_gdf = GeoDataFrame(gpd.overlay(get_sample_parcels(context.city), boundary_gdf))
-    nodes_gdf = GeoDataFrame(read_feather(f"{context.city}/network/street_node"))
-    links_gdf = GeoDataFrame(read_feather(f"{context.city}/network/street_link"))
-    save_feature_dict(label, series, f"data/{context.city}/spider_weaver/feature_dict.json")
+    sample_gdf = GeoDataFrame(gpd.overlay(get_sample_rent_prices(get_bucket_id(context.city)), boundary_gdf))
+    nodes_gdf = GeoDataFrame(read_feather(f"{get_bucket_id(context.city)}/network/street_node"))
+    links_gdf = GeoDataFrame(read_feather(f"{get_bucket_id(context.city)}/network/street_link"))
+    save_feature_dict(label, series, f"output/{get_bucket_id(context.city)}/spider_weaver/feature_dict.json")
 
     target_gdf = GeoDataFrame(context.gdf_db[data_frame].copy())
     target_gdf[label] = target_gdf[series]
@@ -88,6 +88,6 @@ def step_impl(context: Context, operation: str, series: str, label: str, radii: 
             axis=1,
         ).drop_duplicates())
         joined_gdf = joined_gdf.loc[:, ~joined_gdf.columns.duplicated()].copy()
-        save_feather(f"{context.city}/spider_weaver/samples/parcel", GeoDataFrame(joined_gdf))
+        save_feather(f"{context.city}/spider_weaver/{get_sample_rent_prices(get_bucket_id(context.city))}", GeoDataFrame(joined_gdf))
         gc.collect()
     pass

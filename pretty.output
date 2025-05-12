@@ -7,3 +7,189 @@ Feature: Spatial Metrics for City of Vancouver # features/2_spatial_metrics.feat
   Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.1                               # features/2_spatial_metrics.feature:20
     Given craigslist/housing_rent data located within Metro Vancouver Regional District                             # features/steps/2_spatial_metrics_steps.py:15
     Given open_street_map/gps_walk data located within Metro Vancouver Regional District                            # features/steps/2_spatial_metrics_steps.py:15
+    When the geometry data of open_street_map/gps_walk is valid                                                     # features/steps/2_spatial_metrics_steps.py:37
+    And count is available in the open_street_map/gps_walk data                                                     # features/steps/2_spatial_metrics_steps.py:44
+    Then sum the count (walkability) within 1600 meters from open_street_map/gps_walk to samples via street network # features/steps/2_spatial_metrics_steps.py:62
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.2                               # features/2_spatial_metrics.feature:21
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                             # None
+    Given bc_assessment/parcel data located within Metro Vancouver Regional District                                # None
+    When the geometry data of bc_assessment/parcel is valid                                                         # None
+    And area_sqkm is available in the bc_assessment/parcel data                                                     # None
+    Then ave the area_sqkm (parcel_area) within 1600 meters from bc_assessment/parcel to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.3                          # features/2_spatial_metrics.feature:22
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                        # None
+    Given bc_assessment/property data located within Metro Vancouver Regional District                         # None
+    When the geometry data of bc_assessment/property is valid                                                  # None
+    And n_use is available in the bc_assessment/property data                                                  # None
+    Then sum the n_use (land_use) within 1600 meters from bc_assessment/property to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.4                                     # features/2_spatial_metrics.feature:23
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                                   # None
+    Given bc_assessment/fabric data located within Metro Vancouver Regional District                                      # None
+    When the geometry data of bc_assessment/fabric is valid                                                               # None
+    And PROPERTY_TYPE is available in the bc_assessment/fabric data                                                       # None
+    Then sum the PROPERTY_TYPE (property_type) within 1600 meters from bc_assessment/fabric to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.5                                     # features/2_spatial_metrics.feature:24
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                                   # None
+    Given bc_assessment/fabric data located within Metro Vancouver Regional District                                      # None
+    When the geometry data of bc_assessment/fabric is valid                                                               # None
+    And BUILDING_TYPE is available in the bc_assessment/fabric data                                                       # None
+    Then sum the BUILDING_TYPE (building_type) within 1600 meters from bc_assessment/fabric to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.6                                           # features/2_spatial_metrics.feature:25
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                                         # None
+    Given bc_assessment/fabric data located within Metro Vancouver Regional District                                            # None
+    When the geometry data of bc_assessment/fabric is valid                                                                     # None
+    And TOTAL_FINISHED_AREA is available in the bc_assessment/fabric data                                                       # None
+    Then sum the TOTAL_FINISHED_AREA (finished_area) within 1600 meters from bc_assessment/fabric to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.7                             # features/2_spatial_metrics.feature:26
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                           # None
+    Given bc_assessment/fabric data located within Metro Vancouver Regional District                              # None
+    When the geometry data of bc_assessment/fabric is valid                                                       # None
+    And LAND_SIZE is available in the bc_assessment/fabric data                                                   # None
+    Then ave the LAND_SIZE (land_size) within 1600 meters from bc_assessment/fabric to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.8                               # features/2_spatial_metrics.feature:27
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                             # None
+    Given bc_assessment/fabric data located within Metro Vancouver Regional District                                # None
+    When the geometry data of bc_assessment/fabric is valid                                                         # None
+    And LAND_DEPTH is available in the bc_assessment/fabric data                                                    # None
+    Then ave the LAND_DEPTH (land_depth) within 1600 meters from bc_assessment/fabric to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.9                                             # features/2_spatial_metrics.feature:28
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                                           # None
+    Given bc_assessment/fabric data located within Metro Vancouver Regional District                                              # None
+    When the geometry data of bc_assessment/fabric is valid                                                                       # None
+    And NUMBER_OF_STOREYS is available in the bc_assessment/fabric data                                                           # None
+    Then sum the NUMBER_OF_STOREYS (number_of_storeys) within 1600 meters from bc_assessment/fabric to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.10                                            # features/2_spatial_metrics.feature:29
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                                           # None
+    Given bc_assessment/fabric data located within Metro Vancouver Regional District                                              # None
+    When the geometry data of bc_assessment/fabric is valid                                                                       # None
+    And NUMBER_OF_STOREYS is available in the bc_assessment/fabric data                                                           # None
+    Then ave the NUMBER_OF_STOREYS (number_of_storeys) within 1600 meters from bc_assessment/fabric to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.11                                            # features/2_spatial_metrics.feature:30
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                                           # None
+    Given bc_assessment/fabric data located within Metro Vancouver Regional District                                              # None
+    When the geometry data of bc_assessment/fabric is valid                                                                       # None
+    And NET_LEASABLE_AREA is available in the bc_assessment/fabric data                                                           # None
+    Then sum the NET_LEASABLE_AREA (net_leasable_area) within 1600 meters from bc_assessment/fabric to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.12                                                # features/2_spatial_metrics.feature:31
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                                               # None
+    Given bc_assessment/fabric data located within Metro Vancouver Regional District                                                  # None
+    When the geometry data of bc_assessment/fabric is valid                                                                           # None
+    And GROSS_LEASABLE_AREA is available in the bc_assessment/fabric data                                                             # None
+    Then sum the GROSS_LEASABLE_AREA (gross_leasable_area) within 1600 meters from bc_assessment/fabric to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.13                                          # features/2_spatial_metrics.feature:32
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                                         # None
+    Given bc_assessment/fabric data located within Metro Vancouver Regional District                                            # None
+    When the geometry data of bc_assessment/fabric is valid                                                                     # None
+    And STRATA_UNIT_AREA is available in the bc_assessment/fabric data                                                          # None
+    Then ave the STRATA_UNIT_AREA (strata_unit_area) within 1600 meters from bc_assessment/fabric to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.14                                          # features/2_spatial_metrics.feature:33
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                                         # None
+    Given bc_assessment/fabric data located within Metro Vancouver Regional District                                            # None
+    When the geometry data of bc_assessment/fabric is valid                                                                     # None
+    And STRATA_UNIT_AREA is available in the bc_assessment/fabric data                                                          # None
+    Then sum the STRATA_UNIT_AREA (strata_unit_area) within 1600 meters from bc_assessment/fabric to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.15                           # features/2_spatial_metrics.feature:34
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                          # None
+    Given bc_assessment/fabric data located within Metro Vancouver Regional District                             # None
+    When the geometry data of bc_assessment/fabric is valid                                                      # None
+    And AREA is available in the bc_assessment/fabric data                                                       # None
+    Then sum the AREA (property_area) within 1600 meters from bc_assessment/fabric to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.16                                         # features/2_spatial_metrics.feature:35
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                                        # None
+    Given census/dissemination_area data located within Metro Vancouver Regional District                                      # None
+    When the geometry data of census/dissemination_area is valid                                                               # None
+    And Population, 2016 is available in the census/dissemination_area data                                                    # None
+    Then sum the Population, 2016 (population) within 1600 meters from census/dissemination_area to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.17                                                                              # features/2_spatial_metrics.feature:36
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                                                                             # None
+    Given census/dissemination_area data located within Metro Vancouver Regional District                                                                           # None
+    When the geometry data of census/dissemination_area is valid                                                                                                    # None
+    And Population density per square kilometre, 2016 is available in the census/dissemination_area data                                                            # None
+    Then ave the Population density per square kilometre, 2016 (population_density) within 1600 meters from census/dissemination_area to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.18                            # features/2_spatial_metrics.feature:37
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                           # None
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                           # None
+    When the geometry data of craigslist/housing_rent is valid                                                    # None
+    And price is available in the craigslist/housing_rent data                                                    # None
+    Then ave the price (rent_price) within 1600 meters from craigslist/housing_rent to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.19                      # features/2_spatial_metrics.feature:38
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                     # None
+    Given network/walking data located within Metro Vancouver Regional District                             # None
+    When the geometry data of network/walking is valid                                                      # None
+    And length is available in the network/walking data                                                     # None
+    Then ave the length (walk_length) within 1600 meters from network/walking to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.20                      # features/2_spatial_metrics.feature:39
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                     # None
+    Given network/walking data located within Metro Vancouver Regional District                             # None
+    When the geometry data of network/walking is valid                                                      # None
+    And length is available in the network/walking data                                                     # None
+    Then sum the length (walk_length) within 1600 meters from network/walking to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.21                       # features/2_spatial_metrics.feature:40
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                      # None
+    Given network/cycling data located within Metro Vancouver Regional District                              # None
+    When the geometry data of network/cycling is valid                                                       # None
+    And length is available in the network/cycling data                                                      # None
+    Then sum the length (cycle_length) within 1600 meters from network/cycling to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.22                              # features/2_spatial_metrics.feature:41
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                             # None
+    Given network/walking data located within Metro Vancouver Regional District                                     # None
+    When the geometry data of network/walking is valid                                                              # None
+    And straight is available in the network/walking data                                                           # None
+    Then ave the straight (walk_straightness) within 1600 meters from network/walking to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.23                               # features/2_spatial_metrics.feature:42
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                              # None
+    Given network/cycling data located within Metro Vancouver Regional District                                      # None
+    When the geometry data of network/cycling is valid                                                               # None
+    And straight is available in the network/cycling data                                                            # None
+    Then ave the straight (cycle_straightness) within 1600 meters from network/cycling to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.24              # features/2_spatial_metrics.feature:43
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District             # None
+    Given ubc/zoning data located within Metro Vancouver Regional District                          # None
+    When the geometry data of ubc/zoning is valid                                                   # None
+    And fsr_max is available in the ubc/zoning data                                                 # None
+    Then ave the fsr_max (max_fsr) within 1600 meters from ubc/zoning to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.25              # features/2_spatial_metrics.feature:44
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District             # None
+    Given ubc/zoning data located within Metro Vancouver Regional District                          # None
+    When the geometry data of ubc/zoning is valid                                                   # None
+    And fsr_max is available in the ubc/zoning data                                                 # None
+    Then max the fsr_max (max_fsr) within 1600 meters from ubc/zoning to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.26              # features/2_spatial_metrics.feature:45
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District             # None
+    Given ubc/zoning data located within Metro Vancouver Regional District                          # None
+    When the geometry data of ubc/zoning is valid                                                   # None
+    And fsr_max is available in the ubc/zoning data                                                 # None
+    Then sum the fsr_max (max_fsr) within 1600 meters from ubc/zoning to samples via street network # None
+
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.27                     # features/2_spatial_metrics.feature:46
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                    # None
+    Given ubc/zoning data located within Metro Vancouver Regional District                                 # None
+    When the geometry data of ubc/zoning is valid                                                          # None
+    And zc is available in the ubc/zoning data                                                             # None
+    Then sum the zc (zone_classification) within 1600 meters from ubc/zoning to samples via street network # None
+
