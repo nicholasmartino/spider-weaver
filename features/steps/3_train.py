@@ -87,6 +87,7 @@ def step_impl(state: Paths, train_size: str, dependent: str) -> None:
     predictor.split()
     predictor.regressor = predictor.train()
     predictor.save(save_path)
+    assert os.path.exists(save_path)
     assert len(os.listdir(save_path)) > 0
 
 

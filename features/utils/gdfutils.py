@@ -1,4 +1,5 @@
 import gc
+import os
 
 import matplotlib.pyplot as plt
 
@@ -28,6 +29,10 @@ def plot_choropleth_map(gdf, column, directory, gray_gdf=None):
     ax.set_axis_off()
 
     plt.tight_layout()
+    
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    
     plt.savefig(f"{directory}/{column.replace('/', '_')}_map.png", dpi=150)
     plt.close()
     gc.collect()
