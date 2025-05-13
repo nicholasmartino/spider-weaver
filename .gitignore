@@ -4,6 +4,5 @@ venv
 .idea
 *.DS_Store*
 .DS_Store
-.vscode
-pretty.output
+*pretty.output
 *gcreds.json

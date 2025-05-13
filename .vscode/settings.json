@@ -1,0 +1,11 @@
+{
+    "python.defaultInterpreterPath": "./venv/bin/python",
+
+    "python.testing.behaveEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.behaveArgs": [
+        "features"
+    ]
+} 
