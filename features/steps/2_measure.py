@@ -70,26 +70,36 @@ def step_impl(context: Context, operation: str, series: str, label: str, radii: 
     links_gdf = GeoDataFrame(read_feather(f"{context.bucket_id}/network/street_link"))
     save_feature_dict(label, series, f"output/{context.bucket_id}/spider_weaver/feature_dict.json")
 
-    target_gdf = GeoDataFrame(context.gdf_db[data_frame].copy())
+    sample_path = get_sample_rent_prices_path(context.bucket_id)
+    output_path = f"{context.bucket_id}/spider_weaver/{sample_path.split(context.bucket_id)[1]}"
+    
+    if os.path.exists(output_path):
+        target_gdf = GeoDataFrame(read_feather(output_path))
+    else:
+        target_gdf = GeoDataFrame(context.gdf_db[data_frame].copy())
+
     target_gdf[label] = target_gdf[series]
     target_gdf = target_gdf.loc[:, [label, "geometry"]].copy()
 
-    joined_gdf = GeoDataFrame(sample_gdf.copy())
+    sample_gdf_copy = GeoDataFrame(sample_gdf.copy())
     for radius in radii.split(", "):
         network: Network = Network(nodes_gdf, links_gdf)
         analyst: SpatialAnalyst = SpatialAnalyst(sample_gdf, target_gdf)
         network_analyst: SpatialNetworkAnalyst = SpatialNetworkAnalyst(analyst, network)
         joined_gdf = GeoDataFrame(pd.concat(
             [
-                joined_gdf,
+                sample_gdf_copy,
                 network_analyst.buffer_join_network(
                     radius=int(radius), operation=operation
                 ),
             ],
             axis=1,
         ).drop_duplicates())
-        joined_gdf = joined_gdf.loc[:, ~joined_gdf.columns.duplicated()].copy()
-        sample_path = get_sample_rent_prices_path(context.bucket_id)
-        save_feather(f"{context.bucket_id}/spider_weaver/{sample_path.split(context.bucket_id)[1]}", GeoDataFrame(joined_gdf))
+        joined_gdf = GeoDataFrame(joined_gdf.loc[:, ~joined_gdf.columns.duplicated()].copy())
+
+        assert len(joined_gdf.columns) > len(sample_gdf_copy.columns)
+        assert len([col for col in joined_gdf.columns if label in col and radii in col]) > 0
+
+        save_feather(output_path, joined_gdf)
         gc.collect()
-    pass
+        

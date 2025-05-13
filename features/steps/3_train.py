@@ -8,6 +8,7 @@ import seaborn as sns
 from behave import *
 from geopandas import GeoDataFrame
 from pandas.api import types
+from pandas.api.types import is_numeric_dtype
 
 from features.utils.datautils import *
 from features.utils.exportutils import *
@@ -70,10 +71,8 @@ def step_impl(state: Paths, train_size: str, dependent: str) -> None:
 
     plot_choropleth_map(gdf, dependent, state.maps)
 
-    not_explanatory: List[str] = ["walk_r", "price_r", "walkability_r", "rent_price_r"]
-    invalid_list: List[str] = [
-        col for col in gdf.columns for invalid in not_explanatory if invalid in col
-    ]
+    not_explanatory: List[str] = ["index", "date", "walk_r", "price_r", "walkability_r", "rent_price_r"]
+    invalid_list: List[str] = [col for col in [col for col in gdf.columns if is_numeric_dtype(gdf[col])] for invalid in not_explanatory if invalid in col]
     invalid_set: List[str] = ["geometry"] + list(set(invalid_list))
     explanatory: List[str] = list(set.difference(set(gdf.columns), invalid_set))
 

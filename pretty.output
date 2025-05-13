@@ -1,113 +1,12 @@
-Feature: Urban Space Dynamics Prediction # features/3_model_training.feature:3
+Feature: Spatial Metrics for City of Vancouver # features/2_measure.feature:3
+  As an urban researcher,
+  I want to spatially aggregate georeferenced data sources to property parcels
+  So that I can train a predictive model.
+  Background:   # features/2_measure.feature:9
 
-  Background:   # features/3_model_training.feature:10
-
-  Scenario Outline: Training a predictive model with spatial data -- @1.1                                            # features/3_model_training.feature:19
-    Given a dataset of georeferenced geometries within Metro Vancouver Regional District                             # features/steps/3_model_training_steps.py:31
-    When the dataset includes valid quantitative and georeferenced data                                              # features/steps/3_model_training_steps.py:50
-    Then use 80% of the available data to train a random forest model to predict walkability_r1600_sum_flat variable # features/steps/3_model_training_steps.py:57
-      Traceback (most recent call last):
-        File "/Users/nicholasmartino/Code/spider-weaver/venv/lib/python3.11/site-packages/behave/model.py", line 1329, in run
-          match.run(runner.context)
-        File "/Users/nicholasmartino/Code/spider-weaver/venv/lib/python3.11/site-packages/behave/matchers.py", line 98, in run
-          self.func(context, *args, **kwargs)
-        File "features/steps/3_model_training_steps.py", line 88, in step_impl
-          predictor.regressor = predictor.train()
-                                ^^^^^^^^^^^^^^^^^
-        File "/Users/nicholasmartino/Code/spider-weaver/learnkit/train/Predictor.py", line 52, in train
-          rfr.fit(x_train, y_train)
-        File "/Users/nicholasmartino/Code/spider-weaver/venv/lib/python3.11/site-packages/sklearn/base.py", line 1473, in wrapper
-          return fit_method(estimator, *args, **kwargs)
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        File "/Users/nicholasmartino/Code/spider-weaver/venv/lib/python3.11/site-packages/sklearn/ensemble/_forest.py", line 363, in fit
-          X, y = self._validate_data(
-                 ^^^^^^^^^^^^^^^^^^^^
-        File "/Users/nicholasmartino/Code/spider-weaver/venv/lib/python3.11/site-packages/sklearn/base.py", line 650, in _validate_data
-          X, y = check_X_y(X, y, **check_params)
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        File "/Users/nicholasmartino/Code/spider-weaver/venv/lib/python3.11/site-packages/sklearn/utils/validation.py", line 1273, in check_X_y
-          X = check_array(
-              ^^^^^^^^^^^^
-        File "/Users/nicholasmartino/Code/spider-weaver/venv/lib/python3.11/site-packages/sklearn/utils/validation.py", line 1007, in check_array
-          array = _asarray_with_order(array, order=order, dtype=dtype, xp=xp)
-                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        File "/Users/nicholasmartino/Code/spider-weaver/venv/lib/python3.11/site-packages/sklearn/utils/_array_api.py", line 746, in _asarray_with_order
-          array = numpy.asarray(array, order=order, dtype=dtype)
-                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        File "/Users/nicholasmartino/Code/spider-weaver/venv/lib/python3.11/site-packages/pandas/core/generic.py", line 2153, in __array__
-          arr = np.asarray(values, dtype=dtype)
-                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-      ValueError: could not convert string to float: 'NW CORNER PENTHOUSE, S/S APPLIANCES, W/D, CITY, HARBOR & MTN VIEWS'
-
-
-  Scenario Outline: Training a predictive model with spatial data -- @1.2                                           # features/3_model_training.feature:20
-    Given a dataset of georeferenced geometries within Metro Vancouver Regional District                            # features/steps/3_model_training_steps.py:31
-    When the dataset includes valid quantitative and georeferenced data                                             # features/steps/3_model_training_steps.py:50
-    Then use 80% of the available data to train a random forest model to predict rent_price_r1600_ave_flat variable # features/steps/3_model_training_steps.py:57
-      Assertion Failed: Could not find rent_price_r1600_ave_flat within ['index', 'description', 'price', 'area', 'bedrooms', 'date', 'price_sqft', 'descriptio', 'layer', 'path', 'price_bed', 'geometry', 'walkability_r1600_sum_flat'].
-
-
-  Scenario: Predicting dependent variables with a trained model                          # features/3_model_training.feature:22
-    Given a dataset of georeferenced geometries within Metro Vancouver Regional District # features/steps/3_model_training_steps.py:31
-    Given a predictive model trained                                                     # features/steps/3_model_training_steps.py:94
-      Traceback (most recent call last):
-        File "/Users/nicholasmartino/Code/spider-weaver/venv/lib/python3.11/site-packages/behave/model.py", line 1329, in run
-          match.run(runner.context)
-        File "/Users/nicholasmartino/Code/spider-weaver/venv/lib/python3.11/site-packages/behave/matchers.py", line 98, in run
-          self.func(context, *args, **kwargs)
-        File "features/steps/3_model_training_steps.py", line 96, in step_impl
-          assert len(os.listdir(state.predictors)) > 0
-                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-      FileNotFoundError: [Errno 2] No such file or directory: 'data/metro-vancouver-regional-district/spider_weaver/predictors'
-
-    Then assess predictive accuracy based on the test data                               # None
-    And rank explanatory variables by permutation importance                             # None
-
-  Scenario: Exporting maps to external path                                              # features/3_model_training.feature:27
-    Given a dataset of georeferenced geometries within Metro Vancouver Regional District # features/steps/3_model_training_steps.py:31
-    Given a predictive model trained                                                     # features/steps/3_model_training_steps.py:94
-      Traceback (most recent call last):
-        File "/Users/nicholasmartino/Code/spider-weaver/venv/lib/python3.11/site-packages/behave/model.py", line 1329, in run
-          match.run(runner.context)
-        File "/Users/nicholasmartino/Code/spider-weaver/venv/lib/python3.11/site-packages/behave/matchers.py", line 98, in run
-          self.func(context, *args, **kwargs)
-        File "features/steps/3_model_training_steps.py", line 96, in step_impl
-          assert len(os.listdir(state.predictors)) > 0
-                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-      FileNotFoundError: [Errno 2] No such file or directory: 'data/metro-vancouver-regional-district/spider_weaver/predictors'
-
-    Then plot maps of 6 most important variables                                         # None
-    And copy outputs to manuscript path                                                  # None
-
-  Scenario: Plot correlation matrix                                                      # features/3_model_training.feature:32
-    Given a dataset of georeferenced geometries within Metro Vancouver Regional District # features/steps/3_model_training_steps.py:31
-    Given a predictive model trained                                                     # features/steps/3_model_training_steps.py:94
-      Traceback (most recent call last):
-        File "/Users/nicholasmartino/Code/spider-weaver/venv/lib/python3.11/site-packages/behave/model.py", line 1329, in run
-          match.run(runner.context)
-        File "/Users/nicholasmartino/Code/spider-weaver/venv/lib/python3.11/site-packages/behave/matchers.py", line 98, in run
-          self.func(context, *args, **kwargs)
-        File "features/steps/3_model_training_steps.py", line 96, in step_impl
-          assert len(os.listdir(state.predictors)) > 0
-                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-      FileNotFoundError: [Errno 2] No such file or directory: 'data/metro-vancouver-regional-district/spider_weaver/predictors'
-
-    Then plot a correlation matrix of 6 most important features                          # None
-    And copy outputs to manuscript path                                                  # None
-
-  Scenario: Exporting significance to external path                                      # features/3_model_training.feature:37
-    Given a dataset of georeferenced geometries within Metro Vancouver Regional District # features/steps/3_model_training_steps.py:31
-    Given a predictive model trained                                                     # features/steps/3_model_training_steps.py:94
-      Traceback (most recent call last):
-        File "/Users/nicholasmartino/Code/spider-weaver/venv/lib/python3.11/site-packages/behave/model.py", line 1329, in run
-          match.run(runner.context)
-        File "/Users/nicholasmartino/Code/spider-weaver/venv/lib/python3.11/site-packages/behave/matchers.py", line 98, in run
-          self.func(context, *args, **kwargs)
-        File "features/steps/3_model_training_steps.py", line 96, in step_impl
-          assert len(os.listdir(state.predictors)) > 0
-                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-      FileNotFoundError: [Errno 2] No such file or directory: 'data/metro-vancouver-regional-district/spider_weaver/predictors'
-
-    Then plot significance charts of 6 most important variables                          # None
-    And copy outputs to manuscript path                                                  # None
-
+  Scenario Outline: Aggregate from Data Source to Sample Along Street Network -- @1.1                               # features/2_measure.feature:20
+    Given craigslist/housing_rent data located within Metro Vancouver Regional District                             # features/steps/2_measure.py:15
+    Given open_street_map/gps_walk data located within Metro Vancouver Regional District                            # features/steps/2_measure.py:15
+    When the geometry data of open_street_map/gps_walk is valid                                                     # features/steps/2_measure.py:38
+    And count is available in the open_street_map/gps_walk data                                                     # features/steps/2_measure.py:45
+    Then sum the count (walkability) within 1600 meters from open_street_map/gps_walk to samples via street network # features/steps/2_measure.py:63
