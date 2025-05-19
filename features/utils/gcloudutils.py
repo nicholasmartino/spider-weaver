@@ -26,6 +26,14 @@ def copy_gcs_path(bucket_name: str) -> bool:
         os.makedirs(os.path.dirname(local_path), exist_ok=True)
         
         # Download the file
-        blob.download_to_filename(local_path)
-    
+        try:
+            blob.download_to_filename(local_path)
+        except Exception as e:
+            print(f"Error downloading {blob.name}: {e}")
+            continue
+
     return True
+
+
+if __name__ == "__main__":
+    copy_gcs_path("metro-vancouver-regional-district")
