@@ -29,9 +29,10 @@ def save_feather(path: str, gdf: GeoDataFrame) -> None:
 
 def read_feather(path: str) -> GeoDataFrame:
     full_path: str =  f"data/{path}" if ".feather" in path else f"data/{path}.feather"
-    if not os.path.exists(full_path):
-        raise FileNotFoundError(full_path)
-    return read_gdf(full_path)
+    cleaned_path: str = full_path.replace("//", "/").replace("data/data", "data")
+    if not os.path.exists(cleaned_path):
+        raise FileNotFoundError(cleaned_path)
+    return read_gdf(cleaned_path)
 
 
 def get_sample_parcels(path: str) -> GeoDataFrame:

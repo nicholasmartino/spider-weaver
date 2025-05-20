@@ -5,7 +5,7 @@ from google.cloud import storage
 from google.cloud.storage import Blob
 
 
-def copy_gcs_path(bucket_name: str) -> bool:
+def copy_gcs_path(bucket_name: str, exclude_paths: List[str] = []) -> bool:
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     
@@ -17,6 +17,9 @@ def copy_gcs_path(bucket_name: str) -> bool:
     blobs: List[Blob] = list(bucket.list_blobs())
     for blob in blobs:
         if blob.name is None:
+            continue
+        
+        if any([p in blob.name for p in exclude_paths]):
             continue
         
         # Create the full local path
@@ -36,4 +39,4 @@ def copy_gcs_path(bucket_name: str) -> bool:
 
 
 if __name__ == "__main__":
-    copy_gcs_path("metro-vancouver-regional-district")
+    copy_gcs_path("metro-vancouver-regional-district", exclude_paths=["pugmark"])

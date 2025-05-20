@@ -1,10 +1,12 @@
 import gc
 import pickle
-from shapely.ops import nearest_points
-from tqdm import tqdm
+
 import pandas as pd
 from city.shapeutils.ShapeTools import SpatialAnalyst
+from geopandas import GeoDataFrame
 from shapely.geometry import LineString, Point
+from shapely.ops import nearest_points
+from tqdm import tqdm
 
 
 class SpatialNetworkAnalyst:
@@ -14,7 +16,7 @@ class SpatialNetworkAnalyst:
 		self.network = network
 		return
 
-	def buffer_join_network(self, radius, decay='flat', operation='ave', columns=None):
+	def buffer_join_network(self, radius, decay='flat', operation='ave', columns=None) -> GeoDataFrame:
 		"""
 		Aggregates data from the right_gdf located on the surroundings of the gdf elements according to a street network
 		:return:
@@ -229,7 +231,7 @@ class SpatialNetworkAnalyst:
 
 class NetworkMetricsCalculator:
 
-	def __init__(self, gdf):
+	def __init__(self, gdf: GeoDataFrame):
 		self.gdf = gdf
 
 	def calculate_metrics(self):

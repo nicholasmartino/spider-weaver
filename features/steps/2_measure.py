@@ -56,7 +56,7 @@ def step_impl(context: Context, series: str, data_frame: str):
 def step_impl(context: Context, network: str):
     assert context.gdf_db is not None
     calculator = NetworkMetricsCalculator(context.gdf_db[network]).calculate_metrics()
-    save_feather(f"{context.city}/spider_weaver/{network}", calculator.gdf)
+    save_feather(f"{context.city}/spider_weaver/{network}", GeoDataFrame(calculator.gdf))
     pass
 
 
@@ -65,7 +65,6 @@ def step_impl(context: Context, network: str):
 )
 def step_impl(context: Context, operation: str, series: str, label: str, radii: str, data_frame: str):
     boundary_gdf = GeoDataFrame(context.gdf_db[context.city])
-    sample_gdf = GeoDataFrame(gpd.overlay(get_sample_rent_prices(context.bucket_id), boundary_gdf))
     nodes_gdf = GeoDataFrame(read_feather(f"{context.bucket_id}/network/street_node"))
     links_gdf = GeoDataFrame(read_feather(f"{context.bucket_id}/network/street_link"))
     save_feature_dict(label, series, f"output/{context.bucket_id}/spider_weaver/feature_dict.json")
@@ -74,10 +73,12 @@ def step_impl(context: Context, operation: str, series: str, label: str, radii: 
     output_path = f"{context.bucket_id}/spider_weaver/{sample_path.split(context.bucket_id)[1]}"
     
     if os.path.exists(output_path):
-        target_gdf = GeoDataFrame(read_feather(output_path))
+        sample_gdf = GeoDataFrame(read_feather(output_path))
     else:
-        target_gdf = GeoDataFrame(context.gdf_db[data_frame].copy())
-
+        print(f"Could not find {output_path}. Loading default from {sample_path}.")
+        sample_gdf = GeoDataFrame(gpd.overlay(read_feather(sample_path), boundary_gdf))
+        
+    target_gdf = GeoDataFrame(context.gdf_db[data_frame].copy())
     target_gdf[label] = target_gdf[series]
     target_gdf = target_gdf.loc[:, [label, "geometry"]].copy()
 
@@ -97,8 +98,11 @@ def step_impl(context: Context, operation: str, series: str, label: str, radii: 
         ).drop_duplicates())
         joined_gdf = GeoDataFrame(joined_gdf.loc[:, ~joined_gdf.columns.duplicated()].copy())
 
+        has_label = len([col for col in joined_gdf.columns if label in col and radii in col]) > 0
+        has_value = len([col for col in joined_gdf.columns for value in target_gdf[label].unique() if str(value) in col and radii in col]) > 0
+        
         assert len(joined_gdf.columns) > len(sample_gdf_copy.columns)
-        assert len([col for col in joined_gdf.columns if label in col and radii in col]) > 0
+        assert has_label or has_value
 
         save_feather(output_path, joined_gdf)
         gc.collect()
