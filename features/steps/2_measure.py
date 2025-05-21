@@ -48,7 +48,7 @@ def step_impl(context: Context, series: str, data_frame: str):
     assert (
         series in context.gdf_db[data_frame].columns
     ), f"Choose one of {list(context.gdf_db[data_frame].columns)}"
-    context.gdf_db[data_frame] = context.gdf_db[data_frame].loc[:, [series, "geometry"]]
+    context.gdf_db[data_frame] = GeoDataFrame(context.gdf_db[data_frame].loc[:, [series, "geometry"]])
     pass
 
 
