@@ -70,7 +70,7 @@ def step_impl(context: Context, operation: str, series: str, label: str, radii: 
     save_feature_dict(label, series, f"output/{context.bucket_id}/spider_weaver/feature_dict.json")
 
     sample_path = get_sample_rent_prices_path(context.bucket_id)
-    output_path = f"{context.bucket_id}/spider_weaver/{sample_path.split(context.bucket_id)[1]}"
+    output_path = f"data/{context.bucket_id}/spider_weaver{sample_path.split(context.bucket_id)[1]}"
     
     if os.path.exists(output_path):
         sample_gdf = GeoDataFrame(read_feather(output_path))
@@ -87,17 +87,11 @@ def step_impl(context: Context, operation: str, series: str, label: str, radii: 
         network: Network = Network(nodes_gdf, links_gdf)
         analyst: SpatialAnalyst = SpatialAnalyst(sample_gdf, target_gdf)
         network_analyst: SpatialNetworkAnalyst = SpatialNetworkAnalyst(analyst, network)
-        joined_gdf = GeoDataFrame(pd.concat(
-            [
-                sample_gdf_copy,
-                network_analyst.buffer_join_network(
-                    radius=int(radius), operation=operation
-                ),
-            ],
-            axis=1,
-        ).drop_duplicates())
+        
+        joined_buffer = network_analyst.buffer_join_network(radius=int(radius), operation=operation)
+        joined_gdf = GeoDataFrame(pd.concat([ sample_gdf_copy, joined_buffer ], axis=1).drop_duplicates())
         joined_gdf = GeoDataFrame(joined_gdf.loc[:, ~joined_gdf.columns.duplicated()].copy())
-
+        
         has_label = len([col for col in joined_gdf.columns if label in col and radii in col]) > 0
         has_value = len([col for col in joined_gdf.columns for value in target_gdf[label].unique() if str(value) in col and radii in col]) > 0
         

@@ -1,5 +1,6 @@
 import gc
 import pickle
+from typing import List
 
 import pandas as pd
 from city.shapeutils.ShapeTools import SpatialAnalyst
@@ -16,7 +17,7 @@ class SpatialNetworkAnalyst:
 		self.network = network
 		return
 
-	def buffer_join_network(self, radius, decay='flat', operation='ave', columns=None) -> GeoDataFrame:
+	def buffer_join_network(self, radius: int, decay: str = 'flat', operation: str = 'ave', columns: List[str] = None) -> GeoDataFrame:
 		"""
 		Aggregates data from the right_gdf located on the surroundings of the gdf elements according to a street network
 		:return:
