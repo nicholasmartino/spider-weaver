@@ -1,7 +1,7 @@
 import json
 import os.path
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, List
 
 from city.shapeutils.GeoDataFrameUtils import *
 from geopandas import GeoDataFrame
@@ -12,6 +12,7 @@ class Context:
     city: str
     bucket_id: str
     gdf_db: Dict[str, GeoDataFrame]
+    added_columns: List[str]
 
 def get_bucket_id(city: str) -> str:
     return city.lower().replace(' ', '-')
@@ -19,7 +20,7 @@ def get_bucket_id(city: str) -> str:
 def save_feather(path: str, gdf: GeoDataFrame) -> None:
     if ".feather" not in path:
         path = f"{path}.feather"
-    full_path = f"data/{path}"
+    full_path = f"{path}"
     if not os.path.exists(os.path.dirname(full_path)):
         os.makedirs(os.path.dirname(full_path))
     gdf.to_feather(full_path)
@@ -28,7 +29,7 @@ def save_feather(path: str, gdf: GeoDataFrame) -> None:
 
 
 def read_feather(path: str) -> GeoDataFrame:
-    full_path: str =  f"data/{path}" if ".feather" in path else f"data/{path}.feather"
+    full_path: str =  f"{path}" if ".feather" in path else f"{path}.feather"
     cleaned_path: str = full_path.replace("//", "/").replace("data/data", "data")
     if not os.path.exists(cleaned_path):
         raise FileNotFoundError(cleaned_path)
@@ -36,19 +37,10 @@ def read_feather(path: str) -> GeoDataFrame:
 
 
 def get_sample_parcels(path: str) -> GeoDataFrame:
-    processed_parcels_gdf_path = f"data/{path}/spider_weaver/samples/parcel.feather"
+    processed_parcels_gdf_path = f"{path}/spider_weaver/samples/parcel.feather"
     if os.path.exists(processed_parcels_gdf_path):
         return read_gdf(processed_parcels_gdf_path)
-    return read_gdf(f"data/{path}/parcel.feather")
-
-def get_sample_rent_prices_path(path: str) -> str:
-    return f"data/{path}/craigslist/housing_rent.feather"
-
-def get_sample_rent_prices(path: str) -> GeoDataFrame:
-    processed_rent_prices_gdf_path: str = get_sample_rent_prices_path(path)
-    if os.path.exists(processed_rent_prices_gdf_path):
-        return read_gdf(processed_rent_prices_gdf_path)
-    return read_gdf(f"data/{path}/rent_price.feather")
+    return read_gdf(f"{path}/parcel.feather")
 
 
 def get_assets_directory():

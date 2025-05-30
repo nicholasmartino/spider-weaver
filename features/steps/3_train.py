@@ -18,6 +18,7 @@ from learnkit.train.Predictor import *
 
 @dataclass
 class Paths:
+    city_id: str
     city: str
     housing_rent: str
     waters_file: str
@@ -27,6 +28,7 @@ class Paths:
     importance: str
     maps: str
     test: str
+    trained: Dict[str, Predictor]
 
 
 @given("a dataset of georeferenced geometries within {city}")
@@ -34,6 +36,7 @@ def step_impl(paths: Paths, city: str):
     BASE_PATH = "data"
     PROCESSED_PATH = "spider_weaver"
     city_id = city.lower().replace(" ", "-")
+    paths.city_id = city_id
     paths.city = city
     paths.housing_rent = f"{BASE_PATH}/{city_id}/{PROCESSED_PATH}/craigslist/housing_rent.feather"
     paths.waters_file = f"{BASE_PATH}/{city_id}/open_street_map/water_bodies"
@@ -71,10 +74,11 @@ def step_impl(state: Paths, train_size: str, dependent: str) -> None:
 
     plot_choropleth_map(gdf, dependent, state.maps)
 
-    not_explanatory: List[str] = ["index", "date", "walk_r", "price_r", "walkability_r", "rent_price_r"]
-    invalid_list: List[str] = [col for col in [col for col in gdf.columns if is_numeric_dtype(gdf[col])] for invalid in not_explanatory if invalid in col]
-    invalid_set: List[str] = ["geometry"] + list(set(invalid_list))
-    explanatory: List[str] = list(set.difference(set(gdf.columns), invalid_set))
+    not_explanatory: List[str] = ["index", "date", "walk_r", "price_r", "walkability_r", "rent_price_r", 'price_sqft', 'price_bed']
+    invalid_list: List[str] = [col for col in gdf.columns for invalid in not_explanatory if invalid in col]
+    non_numeric_list: List[str] = [col for col in gdf.columns if not is_numeric_dtype(gdf[col])]
+    invalid_set: List[str] = ["geometry"] + list(set(invalid_list + non_numeric_list))
+    explanatory: List[str] = list(set(gdf.columns) - set(invalid_set))
 
     predictor = Predictor(
         data=gdf,
@@ -220,9 +224,10 @@ def read_important_features(importance_dir: str, feature_count: int) -> List[Lis
     for file in os.listdir(importance_dir):
         if ".csv" not in file:
             continue
+        
+        df = pd.read_csv(f"{importance_dir}/{file}", encoding="latin1")
         features_nested_list.append(
-            list(
-                pd.read_csv(f"{importance_dir}/{file}", encoding="latin1")
+            list(df
                 .groupby("feature", as_index=False)
                 .sum()
                 .sort_values("dependencies", ascending=False)

@@ -17,6 +17,7 @@ from sklearn.model_selection import train_test_split
 @dataclass
 class Predictor:
     data: pd.DataFrame
+    regressor: RandomForestRegressor
     predictors: List[str]
     predicted: str
     test_size: float
@@ -55,14 +56,20 @@ class Predictor:
     def test(self, plot_dir):
         self._is_regressor_null()
         x_train, x_test, y_train, y_test = self.split()
-        y_pred = self.predict(x_test)
+        
+        # Filter out rows with missing values to ensure consistent sample counts
+        valid_indices = x_test.loc[:, self.predictors].dropna().index
+        x_test_clean = x_test.loc[valid_indices, self.predictors]
+        y_test_clean = y_test.loc[valid_indices]
+        
+        y_pred = self.regressor.predict(x_test_clean)
 
         if not os.path.exists(plot_dir):
             os.makedirs(plot_dir)
 
-        mean_error = round(sqrt(mean_squared_error(y_test, y_pred)), 2)
-        r2 = round(r2_score(y_test, y_pred), 2)
-        joint = sns.jointplot(x=y_pred, y=y_test, kind="reg", scatter_kws={'alpha': 0.1}, seed=0)
+        mean_error = round(sqrt(mean_squared_error(y_test_clean, y_pred)), 2)
+        r2 = round(r2_score(y_test_clean, y_pred), 2)
+        joint = sns.jointplot(x=y_pred, y=y_test_clean, kind="reg", scatter_kws={'alpha': 0.1}, seed=0)
         joint.ax_joint.annotate(f'rmse: {mean_error} | r2: {r2}', xy=(0.05, 0.95), xycoords='axes fraction')
         joint.ax_joint.set_xlabel(f'{self.predicted} (predicted data)')
         joint.ax_joint.set_ylabel(f'{self.predicted} (test set)')
@@ -70,7 +77,9 @@ class Predictor:
         return self
 
     def predict(self, x):
-        return self.regressor.predict(x.loc[:, self.predictors].dropna())
+        # Filter to only include rows without missing values in predictor columns
+        x_clean = x.loc[:, self.predictors].dropna()
+        return self.regressor.predict(x_clean)
 
     def save(self, directory):
         self._is_regressor_null()

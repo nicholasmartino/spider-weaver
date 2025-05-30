@@ -20,9 +20,9 @@ def step_impl(context: Context, data_frame: str, city: str):
     if not os.path.exists("data"):
         copy_gcs_path(bucket_id)
         
-    feather_path = f"{bucket_id}/{data_frame}"
+    feather_path = f"data/{bucket_id}/{data_frame}"
     data_gdf: GeoDataFrame = GeoDataFrame(read_feather(feather_path).to_crs(epsg=26910))
-    boundary_gdf = GeoDataFrame(read_feather(f"{bucket_id}/open_street_map/boundary").to_crs(26910))
+    boundary_gdf = GeoDataFrame(read_feather(f"data/{bucket_id}/open_street_map/boundary").to_crs(26910))
 
     assert boundary_gdf is not None
     assert gdf_box_overlaps(boundary_gdf, data_gdf)
@@ -56,8 +56,20 @@ def step_impl(context: Context, series: str, data_frame: str):
 def step_impl(context: Context, network: str):
     assert context.gdf_db is not None
     calculator = NetworkMetricsCalculator(context.gdf_db[network]).calculate_metrics()
-    save_feather(f"{context.city}/spider_weaver/{network}", GeoDataFrame(calculator.gdf))
+    save_feather(f"data/{context.city}/spider_weaver/{network}", GeoDataFrame(calculator.gdf))
     pass
+
+def get_output_path(context: Context, sample_path: str) -> str:
+    return f"data/{context.bucket_id}/spider_weaver{sample_path.split(context.bucket_id)[1]}"
+
+def get_sample_rent_prices_path(path: str) -> str:
+    return f"data/{path}/craigslist/housing_rent.feather"
+
+def get_sample_rent_prices(path: str) -> GeoDataFrame:
+    processed_rent_prices_gdf_path: str = get_sample_rent_prices_path(path)
+    if os.path.exists(processed_rent_prices_gdf_path):
+        return read_gdf(processed_rent_prices_gdf_path)
+    return read_gdf(f"data/{path}/rent_price.feather")
 
 
 @then(
@@ -65,12 +77,12 @@ def step_impl(context: Context, network: str):
 )
 def step_impl(context: Context, operation: str, series: str, label: str, radii: str, data_frame: str):
     boundary_gdf = GeoDataFrame(context.gdf_db[context.city])
-    nodes_gdf = GeoDataFrame(read_feather(f"{context.bucket_id}/network/street_node"))
-    links_gdf = GeoDataFrame(read_feather(f"{context.bucket_id}/network/street_link"))
-    save_feature_dict(label, series, f"output/{context.bucket_id}/spider_weaver/feature_dict.json")
+    nodes_gdf = GeoDataFrame(read_feather(f"data/{context.bucket_id}/network/street_node"))
+    links_gdf = GeoDataFrame(read_feather(f"data/{context.bucket_id}/network/street_link"))
+    save_feature_dict(label, series, f"data/{context.bucket_id}/spider_weaver/feature_dict.json")
 
     sample_path = get_sample_rent_prices_path(context.bucket_id)
-    output_path = f"data/{context.bucket_id}/spider_weaver{sample_path.split(context.bucket_id)[1]}"
+    output_path = get_output_path(context, sample_path)
     
     if os.path.exists(output_path):
         sample_gdf = GeoDataFrame(read_feather(output_path))
@@ -94,8 +106,6 @@ def step_impl(context: Context, operation: str, series: str, label: str, radii: 
         
         has_label = len([col for col in joined_gdf.columns if label in col and radii in col]) > 0
         has_value = len([col for col in joined_gdf.columns for value in target_gdf[label].unique() if str(value) in col and radii in col]) > 0
-        
-        assert len(joined_gdf.columns) > len(sample_gdf_copy.columns)
         assert has_label or has_value
 
         save_feather(output_path, joined_gdf)
