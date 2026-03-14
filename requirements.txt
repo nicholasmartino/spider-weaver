@@ -1,7 +1,7 @@
 behave==1.2.6
 black>=26.3.1
 blosc2==2.3.0
-certifi==2024.6.2
+certifi>=2024.7.4
 charset-normalizer==3.3.2
 city @ git+https://github.com/nicholasmartino/city.git
 click==8.1.7
@@ -9,11 +9,11 @@ contourpy==1.2.1
 cycler==0.12.1
 fonttools==4.53.0
 geographiclib==2.0
-geopandas==1.0.0
+geopandas>=1.1.2
 geopy==2.4.1
 greenlet==3.1.1
 idna==3.7
-Jinja2==3.1.4
+jinja2>=3.1.6
 joblib==1.4.2
 kiwisolver==1.4.5
 lxml==5.2.0
@@ -55,4 +55,4 @@ threadpoolctl==3.5.0
 tqdm==4.66.4
 typing_extensions==4.12.2
 tzdata==2024.1
-urllib3==2.2.2
+urllib3>=2.6.3
